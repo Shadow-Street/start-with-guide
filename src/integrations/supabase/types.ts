@@ -2325,6 +2325,273 @@ export type Database = {
         }
         Relationships: []
       }
+      fund_plans: {
+        Row: {
+          auto_payout_enabled: boolean | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          entry_load_percent: number | null
+          exit_load_percent: number | null
+          expected_return_percent: number | null
+          fund_type: string | null
+          id: string
+          investment_period: string | null
+          is_active: boolean | null
+          is_sample: boolean | null
+          last_auto_payout_month: string | null
+          lock_in_period_days: number | null
+          management_fee_percent: number | null
+          maximum_investment: number | null
+          minimum_investment: number | null
+          nav: number | null
+          nav_date: string | null
+          notice_period_days: number | null
+          plan_code: string | null
+          plan_name: string
+          profit_payout_frequency: string | null
+          risk_level: string | null
+          total_aum: number | null
+          total_investors: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          auto_payout_enabled?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          entry_load_percent?: number | null
+          exit_load_percent?: number | null
+          expected_return_percent?: number | null
+          fund_type?: string | null
+          id: string
+          investment_period?: string | null
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          last_auto_payout_month?: string | null
+          lock_in_period_days?: number | null
+          management_fee_percent?: number | null
+          maximum_investment?: number | null
+          minimum_investment?: number | null
+          nav?: number | null
+          nav_date?: string | null
+          notice_period_days?: number | null
+          plan_code?: string | null
+          plan_name: string
+          profit_payout_frequency?: string | null
+          risk_level?: string | null
+          total_aum?: number | null
+          total_investors?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          auto_payout_enabled?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          entry_load_percent?: number | null
+          exit_load_percent?: number | null
+          expected_return_percent?: number | null
+          fund_type?: string | null
+          id?: string
+          investment_period?: string | null
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          last_auto_payout_month?: string | null
+          lock_in_period_days?: number | null
+          management_fee_percent?: number | null
+          maximum_investment?: number | null
+          minimum_investment?: number | null
+          nav?: number | null
+          nav_date?: string | null
+          notice_period_days?: number | null
+          plan_code?: string | null
+          plan_name?: string
+          profit_payout_frequency?: string | null
+          risk_level?: string | null
+          total_aum?: number | null
+          total_investors?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      fund_transactions: {
+        Row: {
+          allocation_id: string | null
+          amount: number
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          fund_plan_id: string | null
+          id: string
+          investor_id: string
+          is_sample: boolean | null
+          nav: number | null
+          notes: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          settlement_date: string | null
+          status: string | null
+          transaction_date: string | null
+          transaction_type: string | null
+          units: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          allocation_id?: string | null
+          amount: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id?: string | null
+          id: string
+          investor_id: string
+          is_sample?: boolean | null
+          nav?: number | null
+          notes?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          settlement_date?: string | null
+          status?: string | null
+          transaction_date?: string | null
+          transaction_type?: string | null
+          units?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          allocation_id?: string | null
+          amount?: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id?: string | null
+          id?: string
+          investor_id?: string
+          is_sample?: boolean | null
+          nav?: number | null
+          notes?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          settlement_date?: string | null
+          status?: string | null
+          transaction_date?: string | null
+          transaction_type?: string | null
+          units?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      fund_wallets: {
+        Row: {
+          available_balance: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          investor_id: string
+          is_sample: boolean | null
+          last_transaction_date: string | null
+          locked_balance: number | null
+          total_deposited: number | null
+          total_withdrawn: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          available_balance?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          investor_id: string
+          is_sample?: boolean | null
+          last_transaction_date?: string | null
+          locked_balance?: number | null
+          total_deposited?: number | null
+          total_withdrawn?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          available_balance?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          investor_id?: string
+          is_sample?: boolean | null
+          last_transaction_date?: string | null
+          locked_balance?: number | null
+          total_deposited?: number | null
+          total_withdrawn?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      fund_withdrawal_requests: {
+        Row: {
+          allocation_id: string | null
+          approved_at: string | null
+          approved_by_admin_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          fund_plan_id: string | null
+          id: string
+          investor_id: string
+          is_sample: boolean | null
+          notes: string | null
+          processed_at: string | null
+          rejection_reason: string | null
+          requested_amount: number
+          status: string | null
+          transaction_id: string | null
+          units_to_redeem: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          allocation_id?: string | null
+          approved_at?: string | null
+          approved_by_admin_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id?: string | null
+          id: string
+          investor_id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          processed_at?: string | null
+          rejection_reason?: string | null
+          requested_amount: number
+          status?: string | null
+          transaction_id?: string | null
+          units_to_redeem?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          allocation_id?: string | null
+          approved_at?: string | null
+          approved_by_admin_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id?: string | null
+          id?: string
+          investor_id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          processed_at?: string | null
+          rejection_reason?: string | null
+          requested_amount?: number
+          status?: string | null
+          transaction_id?: string | null
+          units_to_redeem?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
       impersonation_sessions: {
         Row: {
           admin_user_id: string
@@ -2352,6 +2619,411 @@ export type Database = {
           id?: string
           session_token?: string
           target_user_id?: string
+        }
+        Relationships: []
+      }
+      influencer_posts: {
+        Row: {
+          content: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          duration: string | null
+          id: string
+          influencer_id: string
+          is_premium: boolean | null
+          is_sample: boolean | null
+          like_count: number | null
+          post_type: string | null
+          status: string | null
+          stock_mentions: Json | null
+          tags: Json | null
+          thumbnail_url: string | null
+          title: string
+          updated_date: string | null
+          video_url: string | null
+          view_count: number | null
+        }
+        Insert: {
+          content?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          duration?: string | null
+          id: string
+          influencer_id: string
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          like_count?: number | null
+          post_type?: string | null
+          status?: string | null
+          stock_mentions?: Json | null
+          tags?: Json | null
+          thumbnail_url?: string | null
+          title: string
+          updated_date?: string | null
+          video_url?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          content?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          duration?: string | null
+          id?: string
+          influencer_id?: string
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          like_count?: number | null
+          post_type?: string | null
+          status?: string | null
+          stock_mentions?: Json | null
+          tags?: Json | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_date?: string | null
+          video_url?: string | null
+          view_count?: number | null
+        }
+        Relationships: []
+      }
+      investment_allocations: {
+        Row: {
+          allocation_amount: number
+          allocation_date: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          current_value: number | null
+          days_held: number | null
+          fund_plan_id: string
+          id: string
+          investment_request_id: string | null
+          investor_id: string
+          is_sample: boolean | null
+          last_profit_payout_date: string | null
+          nav_at_allocation: number
+          profit_earned: number | null
+          status: string | null
+          units_allocated: number
+          updated_date: string | null
+        }
+        Insert: {
+          allocation_amount: number
+          allocation_date?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_value?: number | null
+          days_held?: number | null
+          fund_plan_id: string
+          id: string
+          investment_request_id?: string | null
+          investor_id: string
+          is_sample?: boolean | null
+          last_profit_payout_date?: string | null
+          nav_at_allocation: number
+          profit_earned?: number | null
+          status?: string | null
+          units_allocated: number
+          updated_date?: string | null
+        }
+        Update: {
+          allocation_amount?: number
+          allocation_date?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_value?: number | null
+          days_held?: number | null
+          fund_plan_id?: string
+          id?: string
+          investment_request_id?: string | null
+          investor_id?: string
+          is_sample?: boolean | null
+          last_profit_payout_date?: string | null
+          nav_at_allocation?: number
+          profit_earned?: number | null
+          status?: string | null
+          units_allocated?: number
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      investment_requests: {
+        Row: {
+          allocation_id: string | null
+          cancellation_reason: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          executed_at: string | null
+          executed_by: string | null
+          fund_plan_id: string
+          id: string
+          investor_id: string
+          is_sample: boolean | null
+          notes: string | null
+          payment_method: string | null
+          requested_amount: number
+          status: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          allocation_id?: string | null
+          cancellation_reason?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          executed_at?: string | null
+          executed_by?: string | null
+          fund_plan_id: string
+          id: string
+          investor_id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payment_method?: string | null
+          requested_amount: number
+          status?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          allocation_id?: string | null
+          cancellation_reason?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          executed_at?: string | null
+          executed_by?: string | null
+          fund_plan_id?: string
+          id?: string
+          investor_id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payment_method?: string | null
+          requested_amount?: number
+          status?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      investor_profit_payouts: {
+        Row: {
+          allocation_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          fund_plan_id: string
+          id: string
+          investor_id: string
+          is_sample: boolean | null
+          notes: string | null
+          payout_amount: number
+          payout_date: string | null
+          payout_period_end: string | null
+          payout_period_start: string | null
+          profit_rate: number | null
+          status: string | null
+          transaction_id: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          allocation_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id: string
+          id: string
+          investor_id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payout_amount: number
+          payout_date?: string | null
+          payout_period_end?: string | null
+          payout_period_start?: string | null
+          profit_rate?: number | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          allocation_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id?: string
+          id?: string
+          investor_id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payout_amount?: number
+          payout_date?: string | null
+          payout_period_end?: string | null
+          payout_period_start?: string | null
+          profit_rate?: number | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      investor_requests: {
+        Row: {
+          admin_notes: string | null
+          annual_income_range: string | null
+          bank_account_number: string | null
+          bank_ifsc_code: string | null
+          bank_name: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          email: string
+          full_name: string
+          id: string
+          investment_experience: string | null
+          is_sample: boolean | null
+          mobile_number: string | null
+          pan_document_url: string | null
+          pan_number: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          annual_income_range?: string | null
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email: string
+          full_name: string
+          id: string
+          investment_experience?: string | null
+          is_sample?: boolean | null
+          mobile_number?: string | null
+          pan_document_url?: string | null
+          pan_number?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          annual_income_range?: string | null
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          investment_experience?: string | null
+          is_sample?: boolean | null
+          mobile_number?: string | null
+          pan_document_url?: string | null
+          pan_number?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      investors: {
+        Row: {
+          bank_account_number: string | null
+          bank_ifsc_code: string | null
+          bank_name: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          current_value: number | null
+          email: string
+          full_name: string
+          id: string
+          investor_code: string | null
+          is_sample: boolean | null
+          kyc_rejection_reason: string | null
+          kyc_status: string | null
+          mobile_number: string | null
+          pan_document_url: string | null
+          pan_number: string | null
+          profit_distribution_plan: string | null
+          risk_profile: string | null
+          status: string | null
+          total_invested: number | null
+          total_profit_loss: number | null
+          updated_date: string | null
+          upi_id: string | null
+          user_id: string
+        }
+        Insert: {
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_value?: number | null
+          email: string
+          full_name: string
+          id: string
+          investor_code?: string | null
+          is_sample?: boolean | null
+          kyc_rejection_reason?: string | null
+          kyc_status?: string | null
+          mobile_number?: string | null
+          pan_document_url?: string | null
+          pan_number?: string | null
+          profit_distribution_plan?: string | null
+          risk_profile?: string | null
+          status?: string | null
+          total_invested?: number | null
+          total_profit_loss?: number | null
+          updated_date?: string | null
+          upi_id?: string | null
+          user_id: string
+        }
+        Update: {
+          bank_account_number?: string | null
+          bank_ifsc_code?: string | null
+          bank_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_value?: number | null
+          email?: string
+          full_name?: string
+          id?: string
+          investor_code?: string | null
+          is_sample?: boolean | null
+          kyc_rejection_reason?: string | null
+          kyc_status?: string | null
+          mobile_number?: string | null
+          pan_document_url?: string | null
+          pan_number?: string | null
+          profit_distribution_plan?: string | null
+          risk_profile?: string | null
+          status?: string | null
+          total_invested?: number | null
+          total_profit_loss?: number | null
+          updated_date?: string | null
+          upi_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
