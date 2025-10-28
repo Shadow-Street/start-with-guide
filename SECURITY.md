@@ -22,15 +22,32 @@ All tables have RLS enabled with role-based access control:
 
 **Profiles Table** (`profiles`):
 - ✅ **Fixed**: Requires authentication to view
+- ✅ Only authenticated users can view profiles (protects PII)
 - ✅ Users can update their own profile
 - ✅ Users can insert their own profile (via signup trigger)
 
-**User-Owned Tables** (`stocks`, `comments`, `discussions`):
+**Comments Table** (`comments`):
+- ✅ **Fixed**: Requires authentication to view
+- ✅ Authenticated users can view all comments (community feature)
+- ✅ Users can create their own comments
+- ✅ Users can modify only their own comments
+- ✅ Prevents anonymous scraping of user data
+
+**Discussions Table** (`discussions`):
+- ✅ **Fixed**: Requires authentication to view
+- ✅ Authenticated users can view all discussions (community feature)
+- ✅ Users can create their own discussions
+- ✅ Users can modify only their own discussions
+- ✅ Protects user investment interests from public profiling
+
+**User-Owned Tables** (`stocks`):
 - ✅ Users can only access their own data
-- ✅ Public read access for community content (comments, discussions)
+- ✅ Complete data isolation per user
 - ✅ Users can modify only their own records
 
 **Admin Tables** (`admin_audit_log`, `impersonation_sessions`):
+- ✅ **Fixed**: Only authenticated users can insert audit logs
+- ✅ INSERT policy validates user owns the action (admin_user_id = auth.uid())
 - ✅ Only admins can view audit logs
 - ✅ Only super_admins can manage impersonation sessions
 - ✅ All admin actions are logged automatically
@@ -179,12 +196,15 @@ await endImpersonation(sessionToken);
 - Users see only their own role
 - Admins can view all roles (verified server-side)
 
-### ✅ Issue #2: Profiles Publicly Accessible
-**Before**: All profile data readable without authentication  
+### ✅ Issue #2: Public Data Access
+**Before**: Comments, discussions, and profiles readable without authentication  
 **After**: 
-- Requires authentication to view profiles
-- Maintains community features while adding privacy
-- Can easily add privacy levels per user if needed
+- ✅ All tables require authentication to view
+- ✅ Profiles protected (contains PII: names, bios, avatars)
+- ✅ Comments protected (prevents anonymous scraping)
+- ✅ Discussions protected (protects investment interests)
+- ✅ Community features maintained (authenticated users can view all)
+- ✅ Note: If public access is needed, create separate public tables
 
 ### ✅ Issue #3: Client-Side Authorization
 **Status**: Documented and improved
