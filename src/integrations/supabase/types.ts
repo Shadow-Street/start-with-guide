@@ -14,6 +14,222 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_campaigns: {
+        Row: {
+          billing_model: string | null
+          clicks: number | null
+          cpc_rate: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          creative_url: string | null
+          cta_link: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          impressions: number | null
+          is_sample: boolean | null
+          monthly_fee: number | null
+          rejection_reason: string | null
+          revenue_generated: number | null
+          start_date: string | null
+          status: string | null
+          title: string
+          updated_date: string | null
+          vendor_id: string | null
+          weekly_fee: number | null
+        }
+        Insert: {
+          billing_model?: string | null
+          clicks?: number | null
+          cpc_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          creative_url?: string | null
+          cta_link?: string | null
+          description?: string | null
+          end_date?: string | null
+          id: string
+          impressions?: number | null
+          is_sample?: boolean | null
+          monthly_fee?: number | null
+          rejection_reason?: string | null
+          revenue_generated?: number | null
+          start_date?: string | null
+          status?: string | null
+          title: string
+          updated_date?: string | null
+          vendor_id?: string | null
+          weekly_fee?: number | null
+        }
+        Update: {
+          billing_model?: string | null
+          clicks?: number | null
+          cpc_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          creative_url?: string | null
+          cta_link?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          impressions?: number | null
+          is_sample?: boolean | null
+          monthly_fee?: number | null
+          rejection_reason?: string | null
+          revenue_generated?: number | null
+          start_date?: string | null
+          status?: string | null
+          title?: string
+          updated_date?: string | null
+          vendor_id?: string | null
+          weekly_fee?: number | null
+        }
+        Relationships: []
+      }
+      ad_clicks: {
+        Row: {
+          campaign_id: string | null
+          cost: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          updated_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          cost?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          cost?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_clicks_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_impressions: {
+        Row: {
+          campaign_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          updated_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_impressions_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_transactions: {
+        Row: {
+          amount: number | null
+          campaign_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          payment_method: string | null
+          payment_status: string | null
+          transaction_date: string | null
+          transaction_type: string | null
+          updated_date: string | null
+          vendor_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          campaign_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          payment_method?: string | null
+          payment_status?: string | null
+          transaction_date?: string | null
+          transaction_type?: string | null
+          updated_date?: string | null
+          vendor_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          campaign_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          payment_method?: string | null
+          payment_status?: string | null
+          transaction_date?: string | null
+          transaction_type?: string | null
+          updated_date?: string | null
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_transactions_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_audit_log: {
         Row: {
           action: string
@@ -47,6 +263,327 @@ export type Database = {
           target_id?: string | null
           target_table?: string | null
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      advisor_plans_base44: {
+        Row: {
+          advisor_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          duration_days: number | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          is_sample: boolean | null
+          plan_name: string
+          price: number
+          updated_date: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          duration_days?: number | null
+          features?: Json | null
+          id: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          plan_name: string
+          price: number
+          updated_date?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          duration_days?: number | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          plan_name?: string
+          price?: number
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      advisor_posts_base44: {
+        Row: {
+          advisor_id: string
+          content: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          post_type: string | null
+          recommendation_type: string | null
+          required_plan_id: string | null
+          status: string | null
+          stock_symbol: string | null
+          stop_loss: number | null
+          target_price: number | null
+          time_horizon: string | null
+          title: string
+          updated_date: string | null
+        }
+        Insert: {
+          advisor_id: string
+          content: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          post_type?: string | null
+          recommendation_type?: string | null
+          required_plan_id?: string | null
+          status?: string | null
+          stock_symbol?: string | null
+          stop_loss?: number | null
+          target_price?: number | null
+          time_horizon?: string | null
+          title: string
+          updated_date?: string | null
+        }
+        Update: {
+          advisor_id?: string
+          content?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          post_type?: string | null
+          recommendation_type?: string | null
+          required_plan_id?: string | null
+          status?: string | null
+          stock_symbol?: string | null
+          stop_loss?: number | null
+          target_price?: number | null
+          time_horizon?: string | null
+          title?: string
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      advisor_recommendations_base44: {
+        Row: {
+          advisor_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          entry_price: number | null
+          id: string
+          is_sample: boolean | null
+          post_id: string | null
+          rationale: string | null
+          recommendation_type: string
+          risk_level: string | null
+          status: string | null
+          stock_symbol: string
+          stop_loss: number | null
+          target_price: number | null
+          time_horizon: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          advisor_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entry_price?: number | null
+          id: string
+          is_sample?: boolean | null
+          post_id?: string | null
+          rationale?: string | null
+          recommendation_type: string
+          risk_level?: string | null
+          status?: string | null
+          stock_symbol: string
+          stop_loss?: number | null
+          target_price?: number | null
+          time_horizon?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          advisor_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entry_price?: number | null
+          id?: string
+          is_sample?: boolean | null
+          post_id?: string | null
+          rationale?: string | null
+          recommendation_type?: string
+          risk_level?: string | null
+          status?: string | null
+          stock_symbol?: string
+          stop_loss?: number | null
+          target_price?: number | null
+          time_horizon?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      advisor_reviews_base44: {
+        Row: {
+          advisor_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          is_verified: boolean | null
+          rating: number | null
+          review_text: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          advisor_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          is_verified?: boolean | null
+          rating?: number | null
+          review_text?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          advisor_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          is_verified?: boolean | null
+          rating?: number | null
+          review_text?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      advisor_subscriptions_base44: {
+        Row: {
+          advisor_id: string | null
+          amount_paid: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          end_date: string | null
+          id: string
+          is_sample: boolean | null
+          payment_status: string | null
+          plan_id: string | null
+          start_date: string | null
+          status: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          advisor_id?: string | null
+          amount_paid?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          end_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          payment_status?: string | null
+          plan_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          advisor_id?: string | null
+          amount_paid?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          end_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          payment_status?: string | null
+          plan_id?: string | null
+          start_date?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      advisors_base44: {
+        Row: {
+          bio: string | null
+          commission_override_rate: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          display_name: string
+          follower_count: number | null
+          id: string
+          is_sample: boolean | null
+          profile_image_url: string | null
+          sebi_document_url: string | null
+          sebi_registration_number: string | null
+          specialization: Json | null
+          status: string | null
+          success_rate: number | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name: string
+          follower_count?: number | null
+          id: string
+          is_sample?: boolean | null
+          profile_image_url?: string | null
+          sebi_document_url?: string | null
+          sebi_registration_number?: string | null
+          specialization?: Json | null
+          status?: string | null
+          success_rate?: number | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name?: string
+          follower_count?: number | null
+          id?: string
+          is_sample?: boolean | null
+          profile_image_url?: string | null
+          sebi_document_url?: string | null
+          sebi_registration_number?: string | null
+          specialization?: Json | null
+          status?: string | null
+          success_rate?: number | null
+          updated_date?: string | null
+          user_id?: string
         }
         Relationships: []
       }
