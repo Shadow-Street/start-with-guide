@@ -4290,6 +4290,486 @@ export type Database = {
         }
         Relationships: []
       }
+      promo_codes: {
+        Row: {
+          code: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          current_usage: number | null
+          discount_type: string | null
+          discount_value: number
+          expiry_date: string | null
+          id: string
+          is_active: boolean | null
+          is_sample: boolean | null
+          updated_date: string | null
+          usage_limit: number | null
+        }
+        Insert: {
+          code: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_usage?: number | null
+          discount_type?: string | null
+          discount_value: number
+          expiry_date?: string | null
+          id: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          updated_date?: string | null
+          usage_limit?: number | null
+        }
+        Update: {
+          code?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_usage?: number | null
+          discount_type?: string | null
+          discount_value?: number
+          expiry_date?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          updated_date?: string | null
+          usage_limit?: number | null
+        }
+        Relationships: []
+      }
+      referral_badges: {
+        Row: {
+          badge_name: string
+          badge_type: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          criteria: string | null
+          description: string | null
+          earned_at: string | null
+          icon_url: string | null
+          id: string
+          is_sample: boolean | null
+          referrals_required: number | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          badge_name: string
+          badge_type?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          criteria?: string | null
+          description?: string | null
+          earned_at?: string | null
+          icon_url?: string | null
+          id: string
+          is_sample?: boolean | null
+          referrals_required?: number | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          badge_name?: string
+          badge_type?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          criteria?: string | null
+          description?: string | null
+          earned_at?: string | null
+          icon_url?: string | null
+          id?: string
+          is_sample?: boolean | null
+          referrals_required?: number | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          invitee_email: string | null
+          invitee_id: string | null
+          inviter_id: string
+          is_active_member: boolean | null
+          is_sample: boolean | null
+          kyc_completed: boolean | null
+          referral_code: string
+          reward_claimed: boolean | null
+          signup_completed: boolean | null
+          signup_date: string | null
+          updated_date: string | null
+          verification_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          invitee_email?: string | null
+          invitee_id?: string | null
+          inviter_id: string
+          is_active_member?: boolean | null
+          is_sample?: boolean | null
+          kyc_completed?: boolean | null
+          referral_code: string
+          reward_claimed?: boolean | null
+          signup_completed?: boolean | null
+          signup_date?: string | null
+          updated_date?: string | null
+          verification_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          invitee_email?: string | null
+          invitee_id?: string | null
+          inviter_id?: string
+          is_active_member?: boolean | null
+          is_sample?: boolean | null
+          kyc_completed?: boolean | null
+          referral_code?: string
+          reward_claimed?: boolean | null
+          signup_completed?: boolean | null
+          signup_date?: string | null
+          updated_date?: string | null
+          verification_date?: string | null
+        }
+        Relationships: []
+      }
+      refund_requests: {
+        Row: {
+          admin_notes: string | null
+          amount: number
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          entity_id: string
+          entity_type: string | null
+          id: string
+          is_sample: boolean | null
+          processed_at: string | null
+          reason: string
+          refund_method: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string | null
+          transaction_reference: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          amount: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id: string
+          entity_type?: string | null
+          id: string
+          is_sample?: boolean | null
+          processed_at?: string | null
+          reason: string
+          refund_method?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          transaction_reference?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          amount?: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id?: string
+          entity_type?: string | null
+          id?: string
+          is_sample?: boolean | null
+          processed_at?: string | null
+          reason?: string
+          refund_method?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string | null
+          transaction_reference?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      revenue_transactions: {
+        Row: {
+          commission_rate: number
+          course_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          enrollment_id: string | null
+          gross_amount: number
+          id: string
+          influencer_id: string | null
+          influencer_payout: number
+          is_sample: boolean | null
+          payout_date: string | null
+          payout_status: string | null
+          platform_commission: number
+          transaction_type: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          commission_rate: number
+          course_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          enrollment_id?: string | null
+          gross_amount: number
+          id: string
+          influencer_id?: string | null
+          influencer_payout: number
+          is_sample?: boolean | null
+          payout_date?: string | null
+          payout_status?: string | null
+          platform_commission: number
+          transaction_type?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          commission_rate?: number
+          course_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          enrollment_id?: string | null
+          gross_amount?: number
+          id?: string
+          influencer_id?: string | null
+          influencer_payout?: number
+          is_sample?: boolean | null
+          payout_date?: string | null
+          payout_status?: string | null
+          platform_commission?: number
+          transaction_type?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          admin_notes: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_featured: boolean | null
+          is_public: boolean | null
+          is_sample: boolean | null
+          profile_url: string | null
+          rating: number | null
+          rejection_reason: string | null
+          review_text: string
+          social_platform: string | null
+          social_url: string | null
+          status: string | null
+          updated_date: string | null
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_featured?: boolean | null
+          is_public?: boolean | null
+          is_sample?: boolean | null
+          profile_url?: string | null
+          rating?: number | null
+          rejection_reason?: string | null
+          review_text: string
+          social_platform?: string | null
+          social_url?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_featured?: boolean | null
+          is_public?: boolean | null
+          is_sample?: boolean | null
+          profile_url?: string | null
+          rating?: number | null
+          rejection_reason?: string | null
+          review_text?: string
+          social_platform?: string | null
+          social_url?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      role_permissions: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          permission_id: string
+          role_id: string
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          permission_id: string
+          role_id: string
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          permission_id?: string
+          role_id?: string
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      role_template_permissions: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          permission_id: string
+          template_id: string
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          permission_id: string
+          template_id: string
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          permission_id?: string
+          template_id?: string
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      role_templates: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_sample: boolean | null
+          template_name: string
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          template_name: string
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          template_name?: string
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      roles: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          id: string
+          is_sample: boolean | null
+          is_system_role: boolean | null
+          name: string
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id: string
+          is_sample?: boolean | null
+          is_system_role?: boolean | null
+          name: string
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id?: string
+          is_sample?: boolean | null
+          is_system_role?: boolean | null
+          name?: string
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
       stocks: {
         Row: {
           company_name: string | null
