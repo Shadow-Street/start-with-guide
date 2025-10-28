@@ -1737,6 +1737,594 @@ export type Database = {
         }
         Relationships: []
       }
+      expenses: {
+        Row: {
+          added_by_admin_id: string | null
+          added_by_admin_name: string | null
+          amount: number
+          category: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          expense_date: string
+          id: string
+          is_sample: boolean | null
+          updated_date: string | null
+        }
+        Insert: {
+          added_by_admin_id?: string | null
+          added_by_admin_name?: string | null
+          amount: number
+          category: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          expense_date: string
+          id: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+        }
+        Update: {
+          added_by_admin_id?: string | null
+          added_by_admin_name?: string | null
+          amount?: number
+          category?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          expense_date?: string
+          id?: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      feature_configurations: {
+        Row: {
+          changed_by_admin_id: string | null
+          changed_by_admin_name: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          developer_notes: string | null
+          documentation_url: string | null
+          feature_key: string
+          feature_name: string
+          icon_name: string | null
+          id: string
+          is_sample: boolean | null
+          last_status_change_date: string | null
+          module_type: string | null
+          page_url: string | null
+          parent_module_key: string | null
+          priority: string | null
+          reason_for_change: string | null
+          release_date: string | null
+          release_quarter: string | null
+          route_path: string | null
+          sort_order: number | null
+          status: string | null
+          tier: string | null
+          updated_date: string | null
+          visibility_rule: string | null
+          visible_to_users: boolean | null
+        }
+        Insert: {
+          changed_by_admin_id?: string | null
+          changed_by_admin_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          developer_notes?: string | null
+          documentation_url?: string | null
+          feature_key: string
+          feature_name: string
+          icon_name?: string | null
+          id: string
+          is_sample?: boolean | null
+          last_status_change_date?: string | null
+          module_type?: string | null
+          page_url?: string | null
+          parent_module_key?: string | null
+          priority?: string | null
+          reason_for_change?: string | null
+          release_date?: string | null
+          release_quarter?: string | null
+          route_path?: string | null
+          sort_order?: number | null
+          status?: string | null
+          tier?: string | null
+          updated_date?: string | null
+          visibility_rule?: string | null
+          visible_to_users?: boolean | null
+        }
+        Update: {
+          changed_by_admin_id?: string | null
+          changed_by_admin_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          developer_notes?: string | null
+          documentation_url?: string | null
+          feature_key?: string
+          feature_name?: string
+          icon_name?: string | null
+          id?: string
+          is_sample?: boolean | null
+          last_status_change_date?: string | null
+          module_type?: string | null
+          page_url?: string | null
+          parent_module_key?: string | null
+          priority?: string | null
+          reason_for_change?: string | null
+          release_date?: string | null
+          release_quarter?: string | null
+          route_path?: string | null
+          sort_order?: number | null
+          status?: string | null
+          tier?: string | null
+          updated_date?: string | null
+          visibility_rule?: string | null
+          visible_to_users?: boolean | null
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          admin_notes: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          email: string
+          feedback_text: string
+          id: string
+          is_sample: boolean | null
+          name: string
+          status: string | null
+          updated_date: string | null
+          user_id: string | null
+          user_role: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email: string
+          feedback_text: string
+          id: string
+          is_sample?: boolean | null
+          name: string
+          status?: string | null
+          updated_date?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email?: string
+          feedback_text?: string
+          id?: string
+          is_sample?: boolean | null
+          name?: string
+          status?: string | null
+          updated_date?: string | null
+          user_id?: string | null
+          user_role?: string | null
+        }
+        Relationships: []
+      }
+      financial_audit_logs: {
+        Row: {
+          action: string
+          admin_id: string
+          admin_name: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          details: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          is_sample: boolean | null
+          updated_date: string | null
+        }
+        Insert: {
+          action: string
+          admin_id: string
+          admin_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          details?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+        }
+        Update: {
+          action?: string
+          admin_id?: string
+          admin_name?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          details?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      financial_influencers: {
+        Row: {
+          bio: string | null
+          commission_override_rate: number | null
+          commission_rate: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          display_name: string
+          email_verified: boolean | null
+          follower_count: number | null
+          id: string
+          is_sample: boolean | null
+          phone_verified: boolean | null
+          profile_image_url: string | null
+          sebi_registered: boolean | null
+          social_links: Json | null
+          specialization: Json | null
+          status: string | null
+          subscription_price: number | null
+          success_rate: number | null
+          total_revenue: number | null
+          updated_date: string | null
+          user_id: string
+          verified: boolean | null
+        }
+        Insert: {
+          bio?: string | null
+          commission_override_rate?: number | null
+          commission_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name: string
+          email_verified?: boolean | null
+          follower_count?: number | null
+          id: string
+          is_sample?: boolean | null
+          phone_verified?: boolean | null
+          profile_image_url?: string | null
+          sebi_registered?: boolean | null
+          social_links?: Json | null
+          specialization?: Json | null
+          status?: string | null
+          subscription_price?: number | null
+          success_rate?: number | null
+          total_revenue?: number | null
+          updated_date?: string | null
+          user_id: string
+          verified?: boolean | null
+        }
+        Update: {
+          bio?: string | null
+          commission_override_rate?: number | null
+          commission_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name?: string
+          email_verified?: boolean | null
+          follower_count?: number | null
+          id?: string
+          is_sample?: boolean | null
+          phone_verified?: boolean | null
+          profile_image_url?: string | null
+          sebi_registered?: boolean | null
+          social_links?: Json | null
+          specialization?: Json | null
+          status?: string | null
+          subscription_price?: number | null
+          success_rate?: number | null
+          total_revenue?: number | null
+          updated_date?: string | null
+          user_id?: string
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
+      fund_admins: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          display_name: string
+          email: string
+          id: string
+          is_sample: boolean | null
+          permissions: Json | null
+          phone: string | null
+          role: string | null
+          status: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name: string
+          email: string
+          id: string
+          is_sample?: boolean | null
+          permissions?: Json | null
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name?: string
+          email?: string
+          id?: string
+          is_sample?: boolean | null
+          permissions?: Json | null
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fund_allocations: {
+        Row: {
+          average_nav: number
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          current_value: number
+          fund_plan_id: string
+          id: string
+          investment_date: string | null
+          investor_id: string
+          is_sample: boolean | null
+          last_transaction_date: string | null
+          profit_loss: number | null
+          profit_loss_percent: number | null
+          status: string | null
+          total_invested: number
+          units_held: number
+          updated_date: string | null
+        }
+        Insert: {
+          average_nav: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_value?: number
+          fund_plan_id: string
+          id: string
+          investment_date?: string | null
+          investor_id: string
+          is_sample?: boolean | null
+          last_transaction_date?: string | null
+          profit_loss?: number | null
+          profit_loss_percent?: number | null
+          status?: string | null
+          total_invested?: number
+          units_held?: number
+          updated_date?: string | null
+        }
+        Update: {
+          average_nav?: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_value?: number
+          fund_plan_id?: string
+          id?: string
+          investment_date?: string | null
+          investor_id?: string
+          is_sample?: boolean | null
+          last_transaction_date?: string | null
+          profit_loss?: number | null
+          profit_loss_percent?: number | null
+          status?: string | null
+          total_invested?: number
+          units_held?: number
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      fund_invoices: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          fee_amount: number | null
+          gross_amount: number
+          id: string
+          investor_id: string
+          invoice_date: string
+          invoice_number: string
+          invoice_type: string | null
+          invoice_url: string | null
+          is_sample: boolean | null
+          net_amount: number
+          status: string | null
+          tax_amount: number | null
+          transaction_id: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fee_amount?: number | null
+          gross_amount: number
+          id: string
+          investor_id: string
+          invoice_date: string
+          invoice_number: string
+          invoice_type?: string | null
+          invoice_url?: string | null
+          is_sample?: boolean | null
+          net_amount: number
+          status?: string | null
+          tax_amount?: number | null
+          transaction_id?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fee_amount?: number | null
+          gross_amount?: number
+          id?: string
+          investor_id?: string
+          invoice_date?: string
+          invoice_number?: string
+          invoice_type?: string | null
+          invoice_url?: string | null
+          is_sample?: boolean | null
+          net_amount?: number
+          status?: string | null
+          tax_amount?: number | null
+          transaction_id?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      fund_notifications: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          investor_id: string
+          is_sample: boolean | null
+          message: string
+          notification_type: string | null
+          related_entity_id: string | null
+          related_entity_type: string | null
+          status: string | null
+          title: string
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          investor_id: string
+          is_sample?: boolean | null
+          message: string
+          notification_type?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string | null
+          title: string
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          investor_id?: string
+          is_sample?: boolean | null
+          message?: string
+          notification_type?: string | null
+          related_entity_id?: string | null
+          related_entity_type?: string | null
+          status?: string | null
+          title?: string
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      fund_payout_requests: {
+        Row: {
+          amount: number
+          approved_at: string | null
+          approved_by_admin_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          fund_manager_id: string
+          fund_plan_id: string | null
+          id: string
+          is_sample: boolean | null
+          notes: string | null
+          payment_date: string | null
+          payment_method: string | null
+          payment_reference: string | null
+          rejection_reason: string | null
+          request_date: string | null
+          status: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          amount: number
+          approved_at?: string | null
+          approved_by_admin_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_manager_id: string
+          fund_plan_id?: string | null
+          id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          rejection_reason?: string | null
+          request_date?: string | null
+          status?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          amount?: number
+          approved_at?: string | null
+          approved_by_admin_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_manager_id?: string
+          fund_plan_id?: string | null
+          id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payment_date?: string | null
+          payment_method?: string | null
+          payment_reference?: string | null
+          rejection_reason?: string | null
+          request_date?: string | null
+          status?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
       impersonation_sessions: {
         Row: {
           admin_user_id: string
