@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
-import {   Subscription as SubscriptionModel, SubscriptionPlan, User, SubscriptionTransaction, PromoCode } from "@/api/entities";
+import { api } from "@/api";
+import { User } from "@/api/entities"; // Keep User.me() for auth
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -91,9 +92,10 @@ export default function Subscription() {
         setUser(currentUser);
 
         // Load subscription plans
-        const loadedPlans = await SubscriptionPlan.filter({ 
-          is_active: true 
-        }, 'price_monthly').catch(() => []); // Assuming filter supports sort parameter
+        const loadedPlans = await api.getSubscriptionPlans({ 
+          is_active: true,
+          orderBy: 'price_monthly'
+        }).catch(() => []);
         
         if (isMounted && !abortController.signal.aborted) {
           if (loadedPlans.length > 0) {
@@ -106,10 +108,12 @@ export default function Subscription() {
         // Load current subscription only if user is logged in and not an admin
         if (currentUser && !['admin', 'super_admin'].includes(currentUser.app_role)) {
           try {
-            const userSubs = await SubscriptionModel.filter({ 
+            const userSubs = await api.getSubscriptions({ 
               user_id: currentUser.id, 
-              status: 'active' 
-            }, '-created_date', 1).catch(() => []); // Get most recent active sub
+              status: 'active',
+              limit: 1,
+              orderBy: '-created_date'
+            }).catch(() => []); // Get most recent active sub
             
             if (isMounted && !abortController.signal.aborted) {
               setCurrentSubscription(userSubs[0] || null);
@@ -156,7 +160,7 @@ export default function Subscription() {
 
     setIsValidatingPromo(true);
     try {
-      const promoCodes = await PromoCode.filter({ code: promoCode.trim(), is_active: true });
+      const promoCodes = await api.getPromoCodes({ code: promoCode.trim(), is_active: true });
       
       if (promoCodes.length === 0) {
         toast.error('Invalid or expired promo code');
@@ -231,7 +235,7 @@ export default function Subscription() {
         endDate.setFullYear(endDate.getFullYear() + 1);
       }
 
-      const transaction = await SubscriptionTransaction.create({
+      const transaction = await api.createSubscriptionTransaction({
         user_id: user.id,
         subscription_plan_id: plan.id,
         plan_name: plan.name,
@@ -252,14 +256,14 @@ export default function Subscription() {
       console.log('✅ Transaction created:', transaction.id);
 
       if (currentSubscription) {
-        await SubscriptionModel.update(currentSubscription.id, {
+        await api.updateSubscription(currentSubscription.id, {
           status: 'cancelled',
           cancelAtPeriodEnd: false
         });
         console.log('✅ Old subscription cancelled');
       }
 
-      const newSubscription = await SubscriptionModel.create({
+      const newSubscription = await api.createSubscription({
         user_id: user.id,
         plan_type: plan.name.toLowerCase(),
         status: 'active',
@@ -275,7 +279,7 @@ export default function Subscription() {
       console.log('✅ New subscription created:', newSubscription.id);
 
       if (appliedPromo) {
-        await PromoCode.update(appliedPromo.id, {
+        await api.updatePromoCode(appliedPromo.id, {
           current_usage: (appliedPromo.current_usage || 0) + 1
         });
         console.log('✅ Promo code usage updated');
@@ -301,7 +305,7 @@ export default function Subscription() {
     
     setIsCancelling(true);
     try {
-      await SubscriptionModel.update(currentSubscription.id, {
+      await api.updateSubscription(currentSubscription.id, {
         cancelAtPeriodEnd: true,
         cancellation_reason: cancellationData.reason,
         cancellation_category: cancellationData.reason_category,

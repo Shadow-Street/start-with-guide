@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { Poll, PollVote, User, Subscription } from "@/api/entities"; // Added Subscription
+import { api } from "@/api";
+import { User } from "@/api/entities"; // Keep User.me() for auth
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -127,7 +128,10 @@ export default function Polls() {
       setUser(currentUser);
 
       // Load polls using filter and limit, with error handling
-      const loadedPolls = await Poll.filter({}, '-created_date', 50).catch((error) => {
+      const loadedPolls = await api.getPolls({ 
+        limit: 50,
+        orderBy: '-created_date' 
+      }).catch((error) => {
         if (!error.message?.includes('aborted')) { // Only log if not an intentional abort
           console.error("Error loading polls:", error);
         }
@@ -148,7 +152,7 @@ export default function Polls() {
       let allVotes = [];
       if (currentUser) {
         // Only load votes if user is logged in
-        allVotes = await PollVote.filter({ user_id: currentUser.id }).catch((error) => {
+        allVotes = await api.getPollVotes({ user_id: currentUser.id }).catch((error) => {
           if (!error.message?.includes('aborted')) {
             console.error("Error loading user votes:", error);
           }
@@ -163,7 +167,7 @@ export default function Polls() {
       // Only check subscription if user is logged in
       if (currentUser && !['admin', 'super_admin'].includes(currentUser.app_role)) {
         try {
-          const subs = await Subscription.filter({
+          const subs = await api.getSubscriptions({
             user_id: currentUser.id,
             status: 'active'
           }).catch(() => []);

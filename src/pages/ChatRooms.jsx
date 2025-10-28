@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
-import { ChatRoom, User } from "@/api/entities";
+import { api } from "@/api";
+import { User } from "@/api/entities"; // Keep User.me() for auth
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -115,7 +116,7 @@ export default function ChatRooms() {
       if (!isMounted || abortController?.signal.aborted) return;
 
       const [rooms, currentUser] = await Promise.all([
-        ChatRoom.list('-participant_count').catch(() => []),
+        api.getChatRooms({ orderBy: '-participant_count' }).catch(() => []),
         User.me().catch(() => null) // Allow null user for guests
       ]);
 

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
-import { News as NewsModel, User } from "@/api/entities";
+import { api } from "@/api";
+import { User } from "@/api/entities"; // Keep User.me() for auth
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -89,7 +90,10 @@ export default function News() {
         setUser(currentUser);
 
         // Load news with error handling
-        const loadedNews = await NewsModel.list('-created_date', 50).catch(() => []);
+        const loadedNews = await api.getNews({ 
+          limit: 50,
+          orderBy: '-created_date'
+        }).catch(() => []);
         
         if (!isMounted || abortController.signal.aborted) return;
 

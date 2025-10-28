@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
-import { User, Referral, ReferralBadge, Subscription } from "@/api/entities";
+import { api } from "@/api";
+import { User } from "@/api/entities"; // Keep User.me() for auth
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -45,8 +46,8 @@ export default function Profile() {
           // Load additional data for logged-in users
           try {
             const [userSubs, userReferrals] = await Promise.all([
-              Subscription.filter({ user_id: currentUser.id, status: 'active' }).catch(() => []),
-              Referral.filter({ inviter_id: currentUser.id }).catch(() => [])
+              api.getSubscriptions({ user_id: currentUser.id, status: 'active' }).catch(() => []),
+              api.getReferrals({ inviter_id: currentUser.id }).catch(() => [])
             ]);
 
             if (isMounted) {

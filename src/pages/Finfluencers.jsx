@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { FinInfluencer, InfluencerPost, User, Subscription } from "@/api/entities";
+import { api } from "@/api";
+import { User } from "@/api/entities"; // Keep User.me() for auth
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -175,12 +176,11 @@ export default function Finfluencers() {
       setUser(currentUser);
 
       // Load finfluencers with error handling, passing abortSignal
-      const loadedInfluencers = await FinInfluencer.filter(
-        { status: 'approved' },
-        '-follower_count',
-        50,
-        abortSignal // Pass abortSignal
-      ).catch(() => []);
+      const loadedInfluencers = await api.getFinfluencers({ 
+        status: 'approved',
+        limit: 50,
+        orderBy: '-follower_count'
+      }).catch(() => []);
 
       if (!isMountedRef.current || abortSignal.aborted) return;
 
@@ -202,12 +202,10 @@ export default function Finfluencers() {
           userHasActiveSubscription = true; // Admins always have full access
         } else {
           try {
-            const subs = await Subscription.filter(
-              { user_id: currentUser.id, status: 'active' },
-              null,
-              null,
-              abortSignal // Pass abortSignal
-            ).catch(() => []);
+            const subs = await api.getSubscriptions({ 
+              user_id: currentUser.id, 
+              status: 'active'
+            }).catch(() => []);
 
             if (isMountedRef.current && !abortSignal.aborted) {
               userHasActiveSubscription = subs.length > 0;

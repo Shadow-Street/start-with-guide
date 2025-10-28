@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Event, EventTicket, EventAttendee, User, Subscription } from '@/api/entities';
+import { api } from '@/api';
+import { User } from '@/api/entities'; // Keep User.me() for auth
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -152,9 +153,11 @@ export default function EventsPage() {
         setUser(currentUser);
 
         // Load events with error handling
-        const loadedEvents = await Event.filter({ 
-          status: { $in: ['approved', 'scheduled'] } 
-        }, '-event_date', 50).catch(() => []);
+        const loadedEvents = await api.getEvents({ 
+          status: { $in: ['approved', 'scheduled'] },
+          limit: 50,
+          orderBy: '-event_date'
+        }).catch(() => []);
         
         if (!isMounted || abortController.signal.aborted) return;
 
@@ -168,9 +171,9 @@ export default function EventsPage() {
         // Only load user-specific data if user is logged in
         if (currentUser?.id) {
           const [ticketsData, attendanceData, subscriptionData] = await Promise.all([
-            EventTicket.filter({ user_id: currentUser.id }).catch(() => []),
-            EventAttendee.filter({ user_id: currentUser.id }).catch(() => []),
-            Subscription.filter({ user_id: currentUser.id, status: 'active' }).catch(() => [])
+            api.getEventTickets({ user_id: currentUser.id }).catch(() => []),
+            api.getEventAttendees({ user_id: currentUser.id }).catch(() => []),
+            api.getSubscriptions({ user_id: currentUser.id, status: 'active' }).catch(() => [])
           ]);
 
           if (!isMounted || abortController.signal.aborted) return;

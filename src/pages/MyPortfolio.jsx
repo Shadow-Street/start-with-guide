@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Plus, TrendingUp, TrendingDown, BarChart3, Wallet, Search, LayoutGrid, List, Eye, MessageSquare, Bell, X, Award, Lock, IndianRupee, User as UserIcon } from 'lucide-react'; // Added UserIcon
-import { User, Stock, UserInvestment, Watchlist, ChatRoom, Poll } from '@/api/entities';
+import { api } from '@/api';
+import { User } from '@/api/entities'; // Keep User.me() for auth
 import { toast } from 'sonner';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom'; // Assuming react-router-dom for Link, adjust if using Next.js/other routing
@@ -95,8 +96,8 @@ export default function MyPortfolio() {
           // Load real portfolio data for logged-in users
           try {
             const [userWatchlist, userInvestments] = await Promise.all([
-              Watchlist.filter({ user_id: currentUser.id }, { signal: abortController.signal }).catch(() => []),
-              UserInvestment.filter({ user_id: currentUser.id }, { signal: abortController.signal }).catch(() => [])
+              api.getWatchlist({ user_id: currentUser.id }).catch(() => []),
+              api.getInvestments({ user_id: currentUser.id }).catch(() => [])
             ]);
 
             if (isMounted && !abortController.signal.aborted) {
@@ -172,14 +173,14 @@ export default function MyPortfolio() {
     }
     try {
       // Ensure we don't add duplicates to watchlist if already present
-      const existingWatchlistItem = await Watchlist.filter({ user_id: user.id, stock_symbol: stock.symbol });
+      const existingWatchlistItem = await api.getWatchlist({ user_id: user.id, stock_symbol: stock.symbol });
       if (existingWatchlistItem.length > 0) {
         toast.info(`${stock.symbol} is already in your watchlist.`);
         setShowAddStockModal(false);
         return;
       }
 
-      const newWatchlistItem = await Watchlist.create({
+      const newWatchlistItem = await api.addToWatchlist({
         user_id: user.id,
         stock_symbol: stock.symbol,
         stock_name: stock.company_name,
@@ -204,7 +205,7 @@ export default function MyPortfolio() {
       return;
     }
     try {
-      const newInvestment = await UserInvestment.create({ ...investmentData, user_id: user.id });
+      const newInvestment = await api.addInvestment({ ...investmentData, user_id: user.id });
       setShowAddInvestmentModal(false);
       toast.success(`Investment in ${investmentData.stock_symbol} added!`);
 
@@ -219,7 +220,7 @@ export default function MyPortfolio() {
 
   const handleChatClick = async (stockSymbol) => {
     try {
-      const rooms = await ChatRoom.filter({ stock_symbol: stockSymbol }, '', 1);
+      const rooms = await api.getChatRooms({ stock_symbol: stockSymbol, limit: 1 });
       if (rooms.length > 0) {
         window.location.href = createPageUrl(`ChatRooms?stock_symbol=${stockSymbol}`);
       } else {
@@ -233,7 +234,7 @@ export default function MyPortfolio() {
 
   const handlePollClick = async (stockSymbol) => {
     try {
-      const polls = await Poll.filter({ stock_symbol: stockSymbol, is_active: true }, '', 1);
+      const polls = await api.getPolls({ stock_symbol: stockSymbol, is_active: true, limit: 1 });
       if (polls.length > 0) {
         window.location.href = createPageUrl(`Polls?stock_symbol=${stockSymbol}`);
       } else {
@@ -271,16 +272,16 @@ export default function MyPortfolio() {
       let deletedFromInvestments = false;
 
       // For watchlist items, find and delete the watchlist entry
-      const watchlistItems = await Watchlist.filter({ user_id: user.id, stock_symbol: stockSymbol });
+      const watchlistItems = await api.getWatchlist({ user_id: user.id, stock_symbol: stockSymbol });
       if (watchlistItems.length > 0) {
-        await Watchlist.delete(watchlistItems[0].id);
+        await api.removeFromWatchlist(watchlistItems[0].id);
         deletedFromWatchlist = true;
       }
 
       // For investments, delete the investment record
-      const investmentsToDelete = await UserInvestment.filter({ user_id: user.id, stock_symbol: stockSymbol });
+      const investmentsToDelete = await api.getInvestments({ user_id: user.id, stock_symbol: stockSymbol });
       if (investmentsToDelete.length > 0) {
-        await UserInvestment.delete(investmentsToDelete[0].id);
+        await api.deleteInvestment(investmentsToDelete[0].id);
         deletedFromInvestments = true;
       }
 

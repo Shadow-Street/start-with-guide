@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
-import { User, Stock, ChatRoom, Poll, AdvisorRecommendation, Subscription, Referral } from "@/api/entities";
+import { api } from "@/api";
+import { User } from "@/api/entities"; // Keep User.me() for auth
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -101,7 +102,7 @@ export default function Dashboard() {
       // Phase 1: Critical data (stocks, chat rooms) - Load sequentially with delays
       let stocks = [];
       try {
-        const stocksResult = await fetchWithRetry(() => Stock.list('-change_percent', 10), 2, 1000);
+        const stocksResult = await fetchWithRetry(() => api.getStocks({ limit: 10, orderBy: '-change_percent' }), 2, 1000);
         if (!isMounted || abortController.signal.aborted || !stocksResult) return;
         stocks = stocksResult;
         await delay(1000); // Increased delay
@@ -113,7 +114,7 @@ export default function Dashboard() {
 
       let chatRooms = [];
       try {
-        const chatRoomsResult = await fetchWithRetry(() => ChatRoom.list('-participant_count', 5), 2, 1000);
+        const chatRoomsResult = await fetchWithRetry(() => api.getChatRooms({ limit: 5, orderBy: '-participant_count' }), 2, 1000);
         if (!isMounted || abortController.signal.aborted || !chatRoomsResult) return;
         chatRooms = chatRoomsResult;
         await delay(1000); // Increased delay
@@ -126,7 +127,7 @@ export default function Dashboard() {
       // Phase 2: Secondary data (polls, recommendations) - Load with increased delays
       let polls = [];
       try {
-        const pollsResult = await fetchWithRetry(() => Poll.filter({ is_active: true }, '-created_date', 5), 2, 1000);
+        const pollsResult = await fetchWithRetry(() => api.getPolls({ is_active: true, limit: 5, orderBy: '-created_date' }), 2, 1000);
         if (!isMounted || abortController.signal.aborted || !pollsResult) return;
         polls = pollsResult;
         await delay(1000); // Increased delay
@@ -138,7 +139,7 @@ export default function Dashboard() {
 
       let recommendations = [];
       try {
-        const recommendationsResult = await fetchWithRetry(() => AdvisorRecommendation.list('-created_date', 3), 2, 1000);
+        const recommendationsResult = await fetchWithRetry(() => api.getAdvisorRecommendations({ limit: 3, orderBy: '-created_date' }), 2, 1000);
         if (!isMounted || abortController.signal.aborted || !recommendationsResult) return;
         recommendations = recommendationsResult;
       } catch (error) {
@@ -174,7 +175,7 @@ export default function Dashboard() {
             // Load subscriptions with retry
             try {
               const userSubs = await fetchWithRetry(
-                () => Subscription.filter({ user_id: currentUser.id, status: 'active' }, '-created_date', 1),
+                () => api.getSubscriptions({ user_id: currentUser.id, status: 'active', limit: 1, orderBy: '-created_date' }),
                 2,
                 1500
               );
@@ -192,7 +193,7 @@ export default function Dashboard() {
             if (!isMounted || abortController.signal.aborted) return;
             try {
               const userReferrals = await fetchWithRetry(
-                () => Referral.filter({ inviter_id: currentUser.id }, '-created_date'),
+                () => api.getReferrals({ inviter_id: currentUser.id, orderBy: '-created_date' }),
                 2,
                 1500
               );

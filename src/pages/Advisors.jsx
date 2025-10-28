@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Advisor, User, Subscription } from '@/api/entities'; // Added Subscription import
+import { api } from '@/api';
+import { User } from '@/api/entities'; // Keep User.me() for auth
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -104,9 +105,11 @@ export default function Advisors() {
                 setCurrentUser(currentUser); // Use setCurrentUser instead of setUser
 
                 // Load advisors with error handling and sorting/limit
-                const loadedAdvisors = await Advisor.filter({ 
-                    status: 'approved' 
-                }, '-follower_count', 50).catch(() => []);
+                const loadedAdvisors = await api.getAdvisors({ 
+                    status: 'approved',
+                    limit: 50,
+                    orderBy: '-follower_count'
+                }).catch(() => []);
                 
                 if (!isMounted || abortController.signal.aborted) return;
 
@@ -120,7 +123,7 @@ export default function Advisors() {
                 // Only check subscription if user is logged in
                 if (currentUser && !['admin', 'super_admin'].includes(currentUser.app_role)) {
                     try {
-                        const subs = await Subscription.filter({ 
+                        const subs = await api.getSubscriptions({ 
                             user_id: currentUser.id, 
                             status: 'active' 
                         }).catch(() => []);
