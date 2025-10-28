@@ -165,15 +165,19 @@ const Landing = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
-        <div className="container mx-auto px-4">
+        {/* Decorative gradient orbs */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-purple-400 to-indigo-600 opacity-20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-blue-400 to-cyan-600 opacity-20 rounded-full blur-3xl"></div>
+        
+        <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-6" variant="secondary">
+            <Badge className="mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 shadow-lg">
               Trusted by 10,000+ Traders
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Trade Smarter, Together
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -181,28 +185,37 @@ const Landing = () => {
               Connect, learn, and trade with confidence.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" onClick={() => navigate('/Register')} className="text-lg">
+              <Button 
+                size="lg" 
+                onClick={() => navigate('/Register')} 
+                className="text-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all"
+              >
                 Get Started Free
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-              <Button size="lg" variant="outline" onClick={() => scrollToSection('features')} className="text-lg">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                onClick={() => scrollToSection('features')} 
+                className="text-lg border-2 border-purple-300 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"
+              >
                 Learn More
               </Button>
             </div>
             
             {/* Stats */}
             <div className="mt-16 grid grid-cols-2 md:grid-cols-3 gap-8">
-              <div>
-                <div className="text-3xl md:text-4xl font-bold text-primary">10K+</div>
-                <div className="text-muted-foreground">Active Traders</div>
+              <div className="p-6 rounded-xl bg-gradient-to-br from-white to-blue-50 shadow-lg border border-blue-100">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">10K+</div>
+                <div className="text-slate-600 font-medium">Active Traders</div>
               </div>
-              <div>
-                <div className="text-3xl md:text-4xl font-bold text-primary">500+</div>
-                <div className="text-muted-foreground">Daily Discussions</div>
+              <div className="p-6 rounded-xl bg-gradient-to-br from-white to-purple-50 shadow-lg border border-purple-100">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">500+</div>
+                <div className="text-slate-600 font-medium">Daily Discussions</div>
               </div>
-              <div className="col-span-2 md:col-span-1">
-                <div className="text-3xl md:text-4xl font-bold text-primary">$2M+</div>
-                <div className="text-muted-foreground">Trading Volume</div>
+              <div className="col-span-2 md:col-span-1 p-6 rounded-xl bg-gradient-to-br from-white to-indigo-50 shadow-lg border border-indigo-100">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-cyan-600 bg-clip-text text-transparent">$2M+</div>
+                <div className="text-slate-600 font-medium">Trading Volume</div>
               </div>
             </div>
           </div>
@@ -210,10 +223,11 @@ const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section id="features" className="py-20 bg-white relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-50/30 to-transparent"></div>
+        <div className="container mx-auto px-4 relative">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Everything You Need to Succeed
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -223,9 +237,9 @@ const Landing = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {features.map((feature, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index} className="hover:shadow-xl transition-all hover:-translate-y-1 bg-gradient-to-br from-white to-slate-50 border-slate-200">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white mb-4 shadow-md">
                     {feature.icon}
                   </div>
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
@@ -242,10 +256,10 @@ const Landing = () => {
       </section>
 
       {/* How It Works */}
-      <section className="py-20">
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               How It Works
             </h2>
             <p className="text-xl text-muted-foreground">
@@ -255,13 +269,13 @@ const Landing = () => {
           
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {steps.map((step, index) => (
-              <div key={index} className="relative">
+              <div key={index} className="relative p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
                 <div className="text-center">
-                  <div className="text-6xl font-bold text-primary/20 mb-4">
+                  <div className="text-6xl font-bold bg-gradient-to-br from-blue-400 to-purple-600 bg-clip-text text-transparent mb-4">
                     {step.number}
                   </div>
-                  <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
-                  <p className="text-muted-foreground">{step.description}</p>
+                  <h3 className="text-2xl font-bold mb-3 text-slate-800">{step.title}</h3>
+                  <p className="text-slate-600">{step.description}</p>
                 </div>
                 {index < steps.length - 1 && (
                   <div className="hidden md:block absolute top-12 left-full w-full h-0.5 bg-border -translate-x-1/2" />
@@ -273,10 +287,11 @@ const Landing = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section id="pricing" className="py-20 bg-white relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/40 via-transparent to-blue-50/40"></div>
+        <div className="container mx-auto px-4 relative">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Choose Your Plan
             </h2>
             <p className="text-xl text-muted-foreground">
@@ -288,11 +303,11 @@ const Landing = () => {
             {plans.map((plan, index) => (
               <Card 
                 key={index} 
-                className={`relative ${plan.popular ? 'border-primary shadow-lg scale-105' : ''}`}
+                className={`relative ${plan.popular ? 'border-purple-300 shadow-xl scale-105 bg-gradient-to-br from-white to-purple-50' : 'bg-gradient-to-br from-white to-slate-50'}`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+                    <Badge className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white border-0 shadow-md">Most Popular</Badge>
                   </div>
                 )}
                 <CardHeader>
@@ -312,7 +327,7 @@ const Landing = () => {
                     ))}
                   </ul>
                   <Button 
-                    className="w-full" 
+                    className={`w-full ${plan.popular ? 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-md' : ''}`}
                     variant={plan.popular ? "default" : "outline"}
                     onClick={() => navigate('/Register')}
                   >
@@ -326,10 +341,10 @@ const Landing = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20">
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               What Our Traders Say
             </h2>
             <p className="text-xl text-muted-foreground">
@@ -339,11 +354,11 @@ const Landing = () => {
           
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {testimonials.map((testimonial, index) => (
-              <Card key={index}>
+              <Card key={index} className="bg-white shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader>
                   <div className="flex gap-1 mb-2">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-primary text-primary" />
+                      <Star key={i} className="w-5 h-5 fill-purple-500 text-purple-500" />
                     ))}
                   </div>
                   <CardDescription className="text-base italic">
@@ -361,8 +376,9 @@ const Landing = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMThjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTE4LTE4YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00em0wIDE4YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-20"></div>
+        <div className="container mx-auto px-4 text-center relative">
           <h2 className="text-3xl md:text-5xl font-bold mb-6">
             Ready to Transform Your Trading?
           </h2>
@@ -371,9 +387,8 @@ const Landing = () => {
           </p>
           <Button 
             size="lg" 
-            variant="secondary"
             onClick={() => navigate('/Register')}
-            className="text-lg"
+            className="text-lg bg-white text-purple-600 hover:bg-slate-100 shadow-2xl hover:shadow-3xl transition-all font-bold"
           >
             Get Started Free Today
             <ArrowRight className="ml-2 w-5 h-5" />
@@ -382,41 +397,41 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-muted/30 py-12">
+      <footer className="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-bold text-lg mb-4">Product</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
-                <li><a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a></li>
-                <li><a href="/Dashboard" className="hover:text-foreground transition-colors">Dashboard</a></li>
+              <h3 className="font-bold text-lg mb-4 text-white">Product</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="/Dashboard" className="hover:text-white transition-colors">Dashboard</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-4">Company</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="/contact" className="hover:text-foreground transition-colors">Contact</a></li>
-                <li><a href="/Feedback" className="hover:text-foreground transition-colors">Feedback</a></li>
+              <h3 className="font-bold text-lg mb-4 text-white">Company</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li><a href="/contact" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="/Feedback" className="hover:text-white transition-colors">Feedback</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-4">Resources</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="/Advisors" className="hover:text-foreground transition-colors">Advisors</a></li>
-                <li><a href="/News" className="hover:text-foreground transition-colors">News</a></li>
-                <li><a href="/Events" className="hover:text-foreground transition-colors">Events</a></li>
+              <h3 className="font-bold text-lg mb-4 text-white">Resources</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li><a href="/Advisors" className="hover:text-white transition-colors">Advisors</a></li>
+                <li><a href="/News" className="hover:text-white transition-colors">News</a></li>
+                <li><a href="/Events" className="hover:text-white transition-colors">Events</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-4">Legal</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Terms of Service</a></li>
+              <h3 className="font-bold text-lg mb-4 text-white">Legal</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-border pt-8 text-center text-muted-foreground">
+          <div className="border-t border-slate-700 pt-8 text-center text-slate-400">
             <p>&copy; 2025 TradingPlatform. All rights reserved.</p>
           </div>
         </div>
