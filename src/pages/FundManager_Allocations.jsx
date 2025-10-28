@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FundManagerLayout from '../components/layouts/FundManagerLayout';
-import { FundAllocation, Investor, FundPlan, InvestmentRequest, FundWallet } from '@/api/entities';
+import { api } from '@/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,11 +30,11 @@ export default function FundManager_Allocations() {
     setIsLoading(true);
     try {
       const results = await Promise.allSettled([
-        FundAllocation.list(),
-        InvestmentRequest.filter({ status: 'pending_execution' }, '-created_date'),
-        Investor.list(),
-        FundPlan.list(),
-        FundWallet.list()
+        api.getFundAllocations(),
+        api.getInvestmentRequests({ status: 'pending_execution' }),
+        api.getInvestors(),
+        api.getFundPlans(),
+        api.getFundWallets()
       ]);
 
       const [allocsResult, requestsResult, investorsResult, plansResult, walletsResult] = results;
