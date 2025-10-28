@@ -93,10 +93,12 @@ The following forms have been identified but use Base44 SDK with built-in valida
 
 ```javascript
 export const base44 = createClient({
-  appId: "68bb21f4e5ccdcab161121f6", 
+  appId: import.meta.env.VITE_BASE44_APP_ID, 
   requiresAuth: false
 });
 ```
+
+**Environment Variable:** `VITE_BASE44_APP_ID` in `.env` file
 
 ### Security Assessment
 
@@ -128,13 +130,17 @@ export const base44 = createClient({
 ### Environment Variables Configuration
 
 #### Current Setup
-No environment variables are currently required for Base44 SDK as:
-1. App ID is public and designed for frontend use
-2. No secret keys or tokens are used in the frontend
-3. Backend operations (if any) would use separate authentication
+**Environment Variable Configured:** `VITE_BASE44_APP_ID`
 
-#### ✅ Recommendation: NO ACTION REQUIRED
-The current Base44 SDK configuration is secure and follows best practices for public app identifiers.
+**Security Improvements:**
+1. ✅ App ID moved to environment variable for better configuration management
+2. ✅ App ID is public and designed for frontend use (similar to Supabase anon key)
+3. ✅ No secret keys or tokens are used in the frontend
+4. ✅ Backend operations (if any) would use separate authentication
+5. ✅ Code includes clear documentation that this is a public identifier
+
+#### ✅ Recommendation: SECURE CONFIGURATION
+The Base44 SDK App ID is now properly configured as an environment variable with clear documentation that it's a public identifier safe for frontend use.
 
 ---
 

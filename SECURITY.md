@@ -342,8 +342,8 @@ For security concerns or questions:
 VITE_SUPABASE_URL=https://emzjopxjpdhmeqnivsex.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key_here
 
-# Base44 SDK (verify if needed)
-VITE_BASE44_APP_ID=68bb21f4e5ccdcab161121f6  # Clarify if public/private
+# Base44 SDK (Public Application Identifier)
+VITE_BASE44_APP_ID=68bb21f4e5ccdcab161121f6  # Public key - safe for frontend use
 ```
 
 ---
