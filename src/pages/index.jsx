@@ -198,19 +198,27 @@ function PagesContent() {
     const location = useLocation();
     const currentPage = _getCurrentPage(location.pathname);
     
-    return (
-        <Layout currentPageName={currentPage}>
-            <Routes>            
-                {/* Public Routes */}
+    // Pages that should NOT have the sidebar layout
+    const publicPages = ['/', '/Landing', '/Login', '/Register', '/contact'];
+    const isPublicPage = publicPages.includes(location.pathname);
+    
+    if (isPublicPage) {
+        return (
+            <Routes>
+                {/* Public Routes - NO LAYOUT/SIDEBAR */}
+                <Route path="/" element={<Landing />} />
+                <Route path="/Landing" element={<Landing />} />
                 <Route path="/Login" element={<GuestRoute><Login /></GuestRoute>} />
                 <Route path="/Register" element={<GuestRoute><Register /></GuestRoute>} />
                 <Route path="/contact" element={<contact />} />
-                
-                {/* Landing Page - Public home route */}
-                <Route path="/" element={<Landing />} />
-                <Route path="/Landing" element={<Landing />} />
-                
-                {/* Protected Routes - Require Authentication */}
+            </Routes>
+        );
+    }
+    
+    return (
+        <Layout currentPageName={currentPage}>
+            <Routes>
+                {/* Protected Routes - WITH LAYOUT/SIDEBAR */}
                 <Route path="/Dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                 <Route path="/MyPortfolio" element={<ProtectedRoute><MyPortfolio /></ProtectedRoute>} />
                 <Route path="/ChatRooms" element={<ProtectedRoute><ChatRooms /></ProtectedRoute>} />
