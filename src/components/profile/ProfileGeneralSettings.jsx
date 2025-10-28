@@ -61,12 +61,12 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
       await User.updateMyUserData({ profile_image_url: file_url });
       onUserUpdate({ ...user, profile_image_url: file_url });
       toast.success('Profile picture updated successfully!');
+      setNewImage(null);
     } catch (error) {
       console.error("Error uploading file:", error);
-      toast.error('Failed to upload image. Please try again.');
+      toast.error(error.message || 'Failed to upload image. Please try again.');
     } finally {
       setIsUploading(false);
-      setNewImage(null);
     }
   };
 
@@ -76,15 +76,26 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
       return;
     }
     
+    if (displayName.trim() === user?.display_name) {
+      toast.info('No changes to save');
+      setIsEditingName(false);
+      return;
+    }
+    
     setIsSavingName(true);
     try {
-      await User.updateMyUserData({ display_name: displayName.trim() });
-      onUserUpdate({ ...user, display_name: displayName.trim() });
-      setIsEditingName(false);
-      toast.success('Display name updated successfully!');
+      const result = await User.updateMyUserData({ display_name: displayName.trim() });
+      if (result) {
+        onUserUpdate({ ...user, display_name: displayName.trim() });
+        setIsEditingName(false);
+        toast.success('Display name updated successfully!');
+      } else {
+        throw new Error('Update returned no data');
+      }
     } catch (error) {
       console.error("Error updating display name:", error);
-      toast.error('Failed to update display name');
+      toast.error(error.message || 'Failed to update display name');
+      setDisplayName(user?.display_name || '');
     } finally {
       setIsSavingName(false);
     }
@@ -176,22 +187,26 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
 
     setIsVerifyingOtp(true);
     try {
-      await User.updateMyUserData({ mobile_number: tempMobileNumber });
-      onUserUpdate({ ...user, mobile_number: tempMobileNumber });
-      
-      setMobileNumber(tempMobileNumber);
-      setIsEditingMobile(false);
-      setOtpSent(false);
-      setOtp('');
-      setTempMobileNumber('');
-      
-      delete window.tempOtp;
-      delete window.otpExpiry;
-      
-      toast.success('Mobile number updated successfully!');
+      const result = await User.updateMyUserData({ mobile_number: tempMobileNumber });
+      if (result) {
+        onUserUpdate({ ...user, mobile_number: tempMobileNumber });
+        
+        setMobileNumber(tempMobileNumber);
+        setIsEditingMobile(false);
+        setOtpSent(false);
+        setOtp('');
+        setTempMobileNumber('');
+        
+        delete window.tempOtp;
+        delete window.otpExpiry;
+        
+        toast.success('Mobile number updated successfully!');
+      } else {
+        throw new Error('Update returned no data');
+      }
     } catch (error) {
       console.error("Error updating mobile number:", error);
-      toast.error('Failed to update mobile number');
+      toast.error(error.message || 'Failed to update mobile number');
     } finally {
       setIsVerifyingOtp(false);
     }
