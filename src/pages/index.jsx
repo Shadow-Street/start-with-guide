@@ -4,8 +4,6 @@ import { ProtectedRoute, GuestRoute } from "@/components/auth/ProtectedRoute";
 
 import Dashboard from "./Dashboard";
 
-import Landing from "./Landing";
-
 import ChatRooms from "./ChatRooms";
 
 import Subscription from "./Subscription";
@@ -93,8 +91,6 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 const PAGES = {
     
     Dashboard: Dashboard,
-
-    Landing: Landing,
     
     ChatRooms: ChatRooms,
     
@@ -206,9 +202,8 @@ function PagesContent() {
                 <Route path="/Register" element={<GuestRoute><Register /></GuestRoute>} />
                 <Route path="/contact" element={<contact />} />
                 
-                {/* Home - Shows Landing for guests, Dashboard for authenticated users */}
-                <Route path="/" element={<Landing />} />
-                <Route path="/Landing" element={<Landing />} />
+                {/* Home - Accessible to all */}
+                <Route path="/" element={<Dashboard />} />
                 
                 {/* Protected Routes - Require Authentication */}
                 <Route path="/Dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
