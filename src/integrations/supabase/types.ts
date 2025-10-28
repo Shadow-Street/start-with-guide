@@ -587,6 +587,402 @@ export type Database = {
         }
         Relationships: []
       }
+      alert_configurations: {
+        Row: {
+          alert_type: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          email_enabled: boolean | null
+          id: string
+          is_enabled: boolean | null
+          is_sample: boolean | null
+          push_enabled: boolean | null
+          severity: string | null
+          threshold_value: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          email_enabled?: boolean | null
+          id: string
+          is_enabled?: boolean | null
+          is_sample?: boolean | null
+          push_enabled?: boolean | null
+          severity?: string | null
+          threshold_value?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          email_enabled?: boolean | null
+          id?: string
+          is_enabled?: boolean | null
+          is_sample?: boolean | null
+          push_enabled?: boolean | null
+          severity?: string | null
+          threshold_value?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      alert_logs: {
+        Row: {
+          action_taken: string | null
+          admin_notes: string | null
+          alert_type: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          is_sample: boolean | null
+          message: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          severity: string | null
+          status: string | null
+          stock_symbol: string | null
+          threshold_value: number | null
+          title: string
+          triggered_value: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          action_taken?: string | null
+          admin_notes?: string | null
+          alert_type: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id: string
+          is_sample?: boolean | null
+          message?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string | null
+          status?: string | null
+          stock_symbol?: string | null
+          threshold_value?: number | null
+          title: string
+          triggered_value?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          action_taken?: string | null
+          admin_notes?: string | null
+          alert_type?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          is_sample?: boolean | null
+          message?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          severity?: string | null
+          status?: string | null
+          stock_symbol?: string | null
+          threshold_value?: number | null
+          title?: string
+          triggered_value?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      alert_settings: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          daily_portfolio_summary: boolean | null
+          email_notifications_enabled: boolean | null
+          id: string
+          is_active: boolean | null
+          is_sample: boolean | null
+          last_consensus: string | null
+          last_price_alert: number | null
+          loss_limit_percent: number | null
+          notify_on_advisor_update: boolean | null
+          notify_on_consensus_change: boolean | null
+          price_change_percent: number | null
+          profit_target_percent: number | null
+          push_notifications_enabled: boolean | null
+          stock_symbol: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          daily_portfolio_summary?: boolean | null
+          email_notifications_enabled?: boolean | null
+          id: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          last_consensus?: string | null
+          last_price_alert?: number | null
+          loss_limit_percent?: number | null
+          notify_on_advisor_update?: boolean | null
+          notify_on_consensus_change?: boolean | null
+          price_change_percent?: number | null
+          profit_target_percent?: number | null
+          push_notifications_enabled?: boolean | null
+          stock_symbol?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          daily_portfolio_summary?: boolean | null
+          email_notifications_enabled?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          last_consensus?: string | null
+          last_price_alert?: number | null
+          loss_limit_percent?: number | null
+          notify_on_advisor_update?: boolean | null
+          notify_on_consensus_change?: boolean | null
+          price_change_percent?: number | null
+          profit_target_percent?: number | null
+          push_notifications_enabled?: boolean | null
+          stock_symbol?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      campaign_billing: {
+        Row: {
+          amount_due: number
+          amount_paid: number | null
+          billing_model: string | null
+          billing_period_end: string
+          billing_period_start: string
+          campaign_id: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          invoice_url: string | null
+          is_sample: boolean | null
+          payment_date: string | null
+          payment_status: string | null
+          total_clicks: number | null
+          total_impressions: number | null
+          updated_date: string | null
+          vendor_id: string
+        }
+        Insert: {
+          amount_due?: number
+          amount_paid?: number | null
+          billing_model?: string | null
+          billing_period_end: string
+          billing_period_start: string
+          campaign_id: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          invoice_url?: string | null
+          is_sample?: boolean | null
+          payment_date?: string | null
+          payment_status?: string | null
+          total_clicks?: number | null
+          total_impressions?: number | null
+          updated_date?: string | null
+          vendor_id: string
+        }
+        Update: {
+          amount_due?: number
+          amount_paid?: number | null
+          billing_model?: string | null
+          billing_period_end?: string
+          billing_period_start?: string
+          campaign_id?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          invoice_url?: string | null
+          is_sample?: boolean | null
+          payment_date?: string | null
+          payment_status?: string | null
+          total_clicks?: number | null
+          total_impressions?: number | null
+          updated_date?: string | null
+          vendor_id?: string
+        }
+        Relationships: []
+      }
+      chat_poll_votes: {
+        Row: {
+          chat_poll_id: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          updated_date: string | null
+          user_id: string
+          vote: string | null
+          vote_date: string
+        }
+        Insert: {
+          chat_poll_id: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+          user_id: string
+          vote?: string | null
+          vote_date: string
+        }
+        Update: {
+          chat_poll_id?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          updated_date?: string | null
+          user_id?: string
+          vote?: string | null
+          vote_date?: string
+        }
+        Relationships: []
+      }
+      chat_polls: {
+        Row: {
+          buy_votes: number | null
+          chat_room_id: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          hold_votes: number | null
+          id: string
+          is_active: boolean | null
+          is_sample: boolean | null
+          poll_date: string
+          sell_votes: number | null
+          stock_symbol: string | null
+          total_votes: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          buy_votes?: number | null
+          chat_room_id: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          hold_votes?: number | null
+          id: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          poll_date: string
+          sell_votes?: number | null
+          stock_symbol?: string | null
+          total_votes?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          buy_votes?: number | null
+          chat_room_id?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          hold_votes?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          poll_date?: string
+          sell_votes?: number | null
+          stock_symbol?: string | null
+          total_votes?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      chat_rooms: {
+        Row: {
+          admin_only_post: boolean | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          id: string
+          is_meeting_active: boolean | null
+          is_premium: boolean | null
+          is_sample: boolean | null
+          meeting_url: string | null
+          name: string
+          participant_count: number | null
+          required_plan: string | null
+          room_type: string | null
+          stock_symbol: string | null
+          success_rate: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          admin_only_post?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id: string
+          is_meeting_active?: boolean | null
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          meeting_url?: string | null
+          name: string
+          participant_count?: number | null
+          required_plan?: string | null
+          room_type?: string | null
+          stock_symbol?: string | null
+          success_rate?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          admin_only_post?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id?: string
+          is_meeting_active?: boolean | null
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          meeting_url?: string | null
+          name?: string
+          participant_count?: number | null
+          required_plan?: string | null
+          room_type?: string | null
+          stock_symbol?: string | null
+          success_rate?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           content: string
@@ -621,6 +1017,108 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      commission_settings: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          default_rate: number
+          description: string | null
+          entity_type: string
+          id: string
+          is_active: boolean | null
+          is_sample: boolean | null
+          minimum_payout_threshold: number | null
+          overrides: Json | null
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          default_rate: number
+          description?: string | null
+          entity_type: string
+          id: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          minimum_payout_threshold?: number | null
+          overrides?: Json | null
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          default_rate?: number
+          description?: string | null
+          entity_type?: string
+          id?: string
+          is_active?: boolean | null
+          is_sample?: boolean | null
+          minimum_payout_threshold?: number | null
+          overrides?: Json | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      commission_tracking: {
+        Row: {
+          base_amount: number
+          commission_amount: number
+          commission_rate: number
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          is_sample: boolean | null
+          notes: string | null
+          payout_date: string | null
+          status: string | null
+          transaction_id: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          base_amount: number
+          commission_amount: number
+          commission_rate: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payout_date?: string | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          base_amount?: number
+          commission_amount?: number
+          commission_rate?: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payout_date?: string | null
+          status?: string | null
+          transaction_id?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       discussions: {
         Row: {
