@@ -86,6 +86,8 @@ import Login from "./Login";
 
 import Register from "./Register";
 
+import Landing from "./Landing";
+
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 const PAGES = {
@@ -174,6 +176,8 @@ const PAGES = {
     
     Register: Register,
     
+    Landing: Landing,
+    
 }
 
 function _getCurrentPage(url) {
@@ -202,8 +206,9 @@ function PagesContent() {
                 <Route path="/Register" element={<GuestRoute><Register /></GuestRoute>} />
                 <Route path="/contact" element={<contact />} />
                 
-                {/* Home - Accessible to all */}
-                <Route path="/" element={<Dashboard />} />
+                {/* Landing Page - Public home route */}
+                <Route path="/" element={<Landing />} />
+                <Route path="/Landing" element={<Landing />} />
                 
                 {/* Protected Routes - Require Authentication */}
                 <Route path="/Dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
