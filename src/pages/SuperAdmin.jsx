@@ -153,23 +153,11 @@ export default function SuperAdmin() {
 
     const loadData = async () => {
       try {
-        // Try to get current user, but don't require it for testing
+        // Get current user from Supabase
         const currentUser = await User.me().catch(() => null);
         
-        if (isMounted) {
-          if (currentUser && (currentUser.app_role === 'super_admin' || currentUser.app_role === 'admin')) {
-            setUser(currentUser);
-          } else {
-            // Set a mock admin user for testing purposes or if not logged in as admin
-            console.warn("No authenticated admin user found or user is not admin/super_admin. Loading mock admin for testing.");
-            setUser({
-              id: 'test-admin',
-              email: 'test@admin.com',
-              display_name: 'Test Admin',
-              app_role: 'super_admin',
-              profile_image_url: 'https://avatar.vercel.sh/test-admin.png'
-            });
-          }
+        if (isMounted && currentUser) {
+          setUser(currentUser);
         }
 
         // Load platform stats with error handling
@@ -206,16 +194,6 @@ export default function SuperAdmin() {
 
       } catch (error) {
         console.error("Error loading SuperAdmin data:", error);
-        // Set mock admin user even on error for testing if not already set
-        if (isMounted && !user) { // Only set mock user if user state is still null
-          setUser({
-            id: 'test-admin-error',
-            email: 'test-error@admin.com',
-            display_name: 'Test Admin (Error)',
-            app_role: 'super_admin',
-            profile_image_url: 'https://avatar.vercel.sh/test-admin-error.png'
-          });
-        }
       } finally {
         if (isMounted) {
           setIsLoading(false);
@@ -304,10 +282,6 @@ export default function SuperAdmin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
-      {/* ⚠️ TESTING MODE WARNING BANNER */}
-      <div className="bg-yellow-500 text-yellow-900 px-4 py-2 text-center text-sm font-semibold">
-        ⚠️ TESTING MODE: Authentication Disabled - Enable Authentication Before Production Deployment
-      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex h-screen bg-gradient-to-br from-slate-100 to-slate-200 font-sans">
         {/* Sidebar */}

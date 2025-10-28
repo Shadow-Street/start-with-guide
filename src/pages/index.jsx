@@ -1,4 +1,6 @@
 import Layout from "./Layout.jsx";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute, GuestRoute } from "@/components/auth/ProtectedRoute";
 
 import Dashboard from "./Dashboard";
 
@@ -195,94 +197,58 @@ function PagesContent() {
     return (
         <Layout currentPageName={currentPage}>
             <Routes>            
-                
-                    <Route path="/" element={<Dashboard />} />
-                
-                
-                <Route path="/Dashboard" element={<Dashboard />} />
-                
-                <Route path="/ChatRooms" element={<ChatRooms />} />
-                
-                <Route path="/Subscription" element={<Subscription />} />
-                
-                <Route path="/Polls" element={<Polls />} />
-                
-                <Route path="/Events" element={<Events />} />
-                
-                <Route path="/AdminPanel" element={<AdminPanel />} />
-                
-                <Route path="/Profile" element={<Profile />} />
-                
+                {/* Public Routes */}
+                <Route path="/Login" element={<GuestRoute><Login /></GuestRoute>} />
+                <Route path="/Register" element={<GuestRoute><Register /></GuestRoute>} />
                 <Route path="/contact" element={<contact />} />
                 
-                <Route path="/Finfluencers" element={<Finfluencers />} />
+                {/* Home - Accessible to all */}
+                <Route path="/" element={<Dashboard />} />
                 
-                <Route path="/InfluencerProfile" element={<InfluencerProfile />} />
+                {/* Protected Routes - Require Authentication */}
+                <Route path="/Dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                <Route path="/MyPortfolio" element={<ProtectedRoute><MyPortfolio /></ProtectedRoute>} />
+                <Route path="/ChatRooms" element={<ProtectedRoute><ChatRooms /></ProtectedRoute>} />
+                <Route path="/Subscription" element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
+                <Route path="/Polls" element={<ProtectedRoute><Polls /></ProtectedRoute>} />
+                <Route path="/Events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+                <Route path="/Profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/Finfluencers" element={<ProtectedRoute><Finfluencers /></ProtectedRoute>} />
+                <Route path="/InfluencerProfile" element={<ProtectedRoute><InfluencerProfile /></ProtectedRoute>} />
+                <Route path="/Advisors" element={<ProtectedRoute><Advisors /></ProtectedRoute>} />
+                <Route path="/AdvisorProfile" element={<ProtectedRoute><AdvisorProfile /></ProtectedRoute>} />
+                <Route path="/AdvisorRegistration" element={<ProtectedRoute><AdvisorRegistration /></ProtectedRoute>} />
+                <Route path="/News" element={<ProtectedRoute><News /></ProtectedRoute>} />
+                <Route path="/SamplePortfolio" element={<ProtectedRoute><SamplePortfolio /></ProtectedRoute>} />
+                <Route path="/Feedback" element={<ProtectedRoute><Feedback /></ProtectedRoute>} />
+                <Route path="/Educators" element={<ProtectedRoute><Educators /></ProtectedRoute>} />
+                <Route path="/PledgePool" element={<ProtectedRoute><PledgePool /></ProtectedRoute>} />
+                <Route path="/MyEvents" element={<ProtectedRoute><MyEvents /></ProtectedRoute>} />
+                <Route path="/BecomeOrganizer" element={<ProtectedRoute><BecomeOrganizer /></ProtectedRoute>} />
+                <Route path="/Invoice" element={<ProtectedRoute><Invoice /></ProtectedRoute>} />
+                <Route path="/FixSidebarOrder" element={<ProtectedRoute><FixSidebarOrder /></ProtectedRoute>} />
+                <Route path="/FeatureHub" element={<ProtectedRoute><FeatureHub /></ProtectedRoute>} />
                 
-                <Route path="/AdvisorRegistration" element={<AdvisorRegistration />} />
+                {/* Role-Based Dashboard Routes */}
+                <Route path="/EntityDashboard" element={<ProtectedRoute allowedRoles={['advisor', 'educator']}><EntityDashboard /></ProtectedRoute>} />
+                <Route path="/FinfluencerDashboard" element={<ProtectedRoute allowedRoles={['finfluencer']}><FinfluencerDashboard /></ProtectedRoute>} />
+                <Route path="/AdvisorDashboard" element={<ProtectedRoute allowedRoles={['advisor']}><AdvisorDashboard /></ProtectedRoute>} />
+                <Route path="/OrganizerDashboard" element={<ProtectedRoute allowedRoles={['advisor', 'finfluencer', 'educator', 'organizer']}><OrganizerDashboard /></ProtectedRoute>} />
+                <Route path="/VendorDashboard" element={<ProtectedRoute allowedRoles={['vendor']}><VendorDashboard /></ProtectedRoute>} />
+                <Route path="/InvestorDashboard" element={<ProtectedRoute allowedRoles={['investor']}><InvestorDashboard /></ProtectedRoute>} />
+                <Route path="/FundManager" element={<ProtectedRoute allowedRoles={['fund_manager']}><FundManager /></ProtectedRoute>} />
+                <Route path="/FundManager_Plans" element={<ProtectedRoute allowedRoles={['fund_manager']}><FundManager_Plans /></ProtectedRoute>} />
+                <Route path="/FundManager_Investors" element={<ProtectedRoute allowedRoles={['fund_manager']}><FundManager_Investors /></ProtectedRoute>} />
+                <Route path="/FundManager_Transactions" element={<ProtectedRoute allowedRoles={['fund_manager']}><FundManager_Transactions /></ProtectedRoute>} />
+                <Route path="/FundManager_Allocations" element={<ProtectedRoute allowedRoles={['fund_manager']}><FundManager_Allocations /></ProtectedRoute>} />
+                <Route path="/FundManager_Reports" element={<ProtectedRoute allowedRoles={['fund_manager']}><FundManager_Reports /></ProtectedRoute>} />
                 
-                <Route path="/Advisors" element={<Advisors />} />
-                
-                <Route path="/AdvisorProfile" element={<AdvisorProfile />} />
-                
-                <Route path="/News" element={<News />} />
-                
-                <Route path="/SamplePortfolio" element={<SamplePortfolio />} />
-                
-                <Route path="/Feedback" element={<Feedback />} />
-                
-                <Route path="/SuperAdmin" element={<SuperAdmin />} />
-                
-                <Route path="/Educators" element={<Educators />} />
-                
-                <Route path="/EntityDashboard" element={<EntityDashboard />} />
-                
-                <Route path="/FinfluencerDashboard" element={<FinfluencerDashboard />} />
-                
-                <Route path="/AdvisorDashboard" element={<AdvisorDashboard />} />
-                
-                <Route path="/EventsManagement" element={<EventsManagement />} />
-                
-                <Route path="/PledgePool" element={<PledgePool />} />
-                
-                <Route path="/ApiExecutions" element={<ApiExecutions />} />
-                
-                <Route path="/AdManagement" element={<AdManagement />} />
-                
-                <Route path="/VendorDashboard" element={<VendorDashboard />} />
-                
-                <Route path="/Invoice" element={<Invoice />} />
-                
-                <Route path="/FundManager" element={<FundManager />} />
-                
-                <Route path="/InvestorDashboard" element={<InvestorDashboard />} />
-                
-                <Route path="/FundManager_Plans" element={<FundManager_Plans />} />
-                
-                <Route path="/FundManager_Investors" element={<FundManager_Investors />} />
-                
-                <Route path="/FundManager_Transactions" element={<FundManager_Transactions />} />
-                
-                <Route path="/FundManager_Allocations" element={<FundManager_Allocations />} />
-                
-                <Route path="/FundManager_Reports" element={<FundManager_Reports />} />
-                
-                <Route path="/FeatureHub" element={<FeatureHub />} />
-                
-                <Route path="/MyPortfolio" element={<MyPortfolio />} />
-                
-                <Route path="/BecomeOrganizer" element={<BecomeOrganizer />} />
-                
-                <Route path="/OrganizerDashboard" element={<OrganizerDashboard />} />
-                
-                <Route path="/MyEvents" element={<MyEvents />} />
-                
-                <Route path="/FixSidebarOrder" element={<FixSidebarOrder />} />
-                
-                <Route path="/Login" element={<Login />} />
-                
-                <Route path="/Register" element={<Register />} />
-                
+                {/* Admin Routes */}
+                <Route path="/AdminPanel" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><AdminPanel /></ProtectedRoute>} />
+                <Route path="/SuperAdmin" element={<ProtectedRoute allowedRoles={['super_admin']}><SuperAdmin /></ProtectedRoute>} />
+                <Route path="/EventsManagement" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><EventsManagement /></ProtectedRoute>} />
+                <Route path="/ApiExecutions" element={<ProtectedRoute allowedRoles={['admin', 'super_admin']}><ApiExecutions /></ProtectedRoute>} />
+                <Route path="/AdManagement" element={<ProtectedRoute allowedRoles={['admin', 'super_admin', 'vendor']}><AdManagement /></ProtectedRoute>} />
             </Routes>
         </Layout>
     );
@@ -291,7 +257,9 @@ function PagesContent() {
 export default function Pages() {
     return (
         <Router>
-            <PagesContent />
+            <AuthProvider>
+                <PagesContent />
+            </AuthProvider>
         </Router>
     );
 }

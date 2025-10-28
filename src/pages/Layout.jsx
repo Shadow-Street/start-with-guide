@@ -199,7 +199,7 @@ function InnerLayout({ children, currentPageName }) {
       setUserRoles([]);
       setIsSubscribed(false);
       setIsGuestMode(true);
-      window.location.href = '/Dashboard';
+      window.location.href = '/Login';
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -293,24 +293,6 @@ function InnerLayout({ children, currentPageName }) {
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
-  }
-
-  // Check SuperAdmin authentication
-  if (isSuperAdminPage) {
-    // Require authentication for SuperAdmin
-    if (!isAuthCheckComplete) {
-      return <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>;
-    }
-    
-    if (!user || !userRoles.includes('super_admin')) {
-      // Redirect to login if not authenticated or not super_admin
-      window.location.href = '/Login';
-      return null;
-    }
-    
-    return <div className="min-h-screen bg-slate-50">{children}</div>;
   }
 
   return (
@@ -483,12 +465,12 @@ function InnerLayout({ children, currentPageName }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem asChild>
-                    <Link to={createPageUrl("Profile")} className="flex items-center gap-2">
+                    <Link to={createPageUrl("Profile")} className="flex items-center gap-2 cursor-pointer">
                       <UserIcon className="w-4 h-4" />
                       Profile Settings
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 text-red-600">
+                  <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 text-red-600 cursor-pointer">
                     <LogOut className="w-4 h-4" />
                     Logout
                   </DropdownMenuItem>
