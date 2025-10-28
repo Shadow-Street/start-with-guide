@@ -47,6 +47,84 @@ function InnerLayout({ children, currentPageName }) {
 
   useEffect(() => {
     let isMounted = true;
+    let retryCount = 0;
+    const maxRetries = 3;
+    
+    // Function to load user data
+    const loadUserData = async (session) => {
+      if (!session?.user || !isMounted) return;
+
+      const userId = session.user.id;
+      console.log('✅ User authenticated:', userId);
+      
+      try {
+        // Fetch user profile from profiles table
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+        
+        if (profileError) {
+          console.error('Error fetching profile:', profileError);
+          
+          // If profile doesn't exist, create one
+          if (profileError.code === 'PGRST116') {
+            console.log('📝 Creating new profile...');
+            const { data: newProfile } = await supabase
+              .from('profiles')
+              .insert({
+                id: userId,
+                username: session.user.email?.split('@')[0],
+                full_name: session.user.user_metadata?.full_name || '',
+              })
+              .select()
+              .single();
+            
+            if (newProfile && isMounted) {
+              console.log('✅ Profile created');
+              setUser({ id: userId, ...newProfile, email: session.user.email });
+              setIsGuestMode(false);
+            }
+          }
+        } else if (profile && isMounted) {
+          console.log('✅ Profile loaded');
+          setUser({ id: userId, ...profile, email: session.user.email });
+          setIsGuestMode(false);
+        }
+        
+        // Always fetch roles and subscription status for authenticated users
+        if (isMounted) {
+          // Fetch user roles with error handling
+          const roles = await getUserRoles(userId).catch((err) => {
+            console.error('Error fetching roles:', err);
+            return ['user'];
+          });
+          console.log('👤 User roles:', roles);
+          setUserRoles(roles);
+
+          // Check subscription status
+          const isAdmin = roles.includes('super_admin') || roles.includes('admin');
+          
+          if (!isAdmin) {
+            const subs = await api.getSubscriptions({ 
+              user_id: userId, 
+              status: 'active' 
+            }).catch((err) => {
+              console.error('Error fetching subscriptions:', err);
+              return [];
+            });
+            
+            setIsSubscribed(subs.length > 0);
+          } else {
+            // Admins always have access
+            setIsSubscribed(true);
+          }
+        }
+      } catch (err) {
+        console.error('Error loading user data:', err);
+      }
+    };
     
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -58,74 +136,7 @@ function InnerLayout({ children, currentPageName }) {
         setSession(session);
         
         if (session?.user) {
-          // User is logged in
-          const userId = session.user.id;
-          
-          console.log('✅ User authenticated:', userId);
-          
-          // Fetch user profile from profiles table
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single();
-          
-          if (profileError) {
-            console.error('Error fetching profile:', profileError);
-            
-            // If profile doesn't exist, create one
-            if (profileError.code === 'PGRST116') {
-              console.log('📝 Creating new profile...');
-              const { data: newProfile } = await supabase
-                .from('profiles')
-                .insert({
-                  id: userId,
-                  username: session.user.email?.split('@')[0],
-                  full_name: session.user.user_metadata?.full_name || '',
-                })
-                .select()
-                .single();
-              
-              if (newProfile && isMounted) {
-                console.log('✅ Profile created');
-                setUser({ id: userId, ...newProfile, email: session.user.email });
-                setIsGuestMode(false);
-              }
-            }
-          } else if (profile && isMounted) {
-            console.log('✅ Profile loaded');
-            setUser({ id: userId, ...profile, email: session.user.email });
-            setIsGuestMode(false);
-          }
-          
-          // Always fetch roles and subscription status for authenticated users
-          if (isMounted) {
-            // Fetch user roles with error handling
-            const roles = await getUserRoles(userId).catch((err) => {
-              console.error('Error fetching roles:', err);
-              return ['user'];
-            });
-            console.log('👤 User roles:', roles);
-            setUserRoles(roles);
-
-            // Check subscription status
-            const isAdmin = roles.includes('super_admin') || roles.includes('admin');
-            
-            if (!isAdmin) {
-              const subs = await api.getSubscriptions({ 
-                user_id: userId, 
-                status: 'active' 
-              }).catch((err) => {
-                console.error('Error fetching subscriptions:', err);
-                return [];
-              });
-              
-              setIsSubscribed(subs.length > 0);
-            } else {
-              // Admins always have access
-              setIsSubscribed(true);
-            }
-          }
+          await loadUserData(session);
         } else {
           // No user logged in - enable guest mode
           if (isMounted) {
@@ -144,26 +155,49 @@ function InnerLayout({ children, currentPageName }) {
       }
     );
 
-    // THEN check for existing session with timeout fallback
+    // THEN check for existing session with retry logic for iframe context
     const initAuth = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession();
+        // Try to get session with retries for iframe context
+        let sessionData = null;
+        let error = null;
+
+        for (let i = 0; i <= maxRetries; i++) {
+          const result = await supabase.auth.getSession();
+          sessionData = result.data;
+          error = result.error;
+          
+          if (!error && sessionData.session) {
+            console.log(`✅ Session retrieved on attempt ${i + 1}`);
+            break;
+          }
+          
+          if (i < maxRetries) {
+            console.log(`⏳ Retry ${i + 1}/${maxRetries} - waiting 500ms...`);
+            await new Promise(resolve => setTimeout(resolve, 500));
+          }
+        }
         
         if (!isMounted) return;
         
         if (error) {
-          console.error('Error getting session:', error);
+          console.error('Error getting session after retries:', error);
           setIsAuthCheckComplete(true);
           setIsGuestMode(true);
           return;
         }
         
-        // If no session, immediately set guest mode
-        if (!session) {
+        if (!sessionData.session) {
+          console.log('👤 No session found - guest mode');
           setIsAuthCheckComplete(true);
           setIsGuestMode(true);
+        } else {
+          // Session exists, load user data immediately
+          console.log('✅ Session found, loading user data...');
+          setSession(sessionData.session);
+          await loadUserData(sessionData.session);
+          setIsAuthCheckComplete(true);
         }
-        // If session exists, the onAuthStateChange will handle it
       } catch (err) {
         console.error('Session check failed:', err);
         if (isMounted) {
@@ -178,11 +212,27 @@ function InnerLayout({ children, currentPageName }) {
     // Fallback timeout to prevent infinite loading
     const timeout = setTimeout(() => {
       if (isMounted && !isAuthCheckComplete) {
-        console.warn('Auth check timeout - enabling guest mode');
-        setIsAuthCheckComplete(true);
-        setIsGuestMode(true);
+        console.warn('⚠️ Auth check timeout - retrying session check...');
+        // One more attempt before giving up
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session && isMounted) {
+            console.log('✅ Recovered session on timeout retry');
+            loadUserData(session).finally(() => {
+              if (isMounted) setIsAuthCheckComplete(true);
+            });
+          } else {
+            console.warn('❌ No session on timeout - enabling guest mode');
+            setIsAuthCheckComplete(true);
+            setIsGuestMode(true);
+          }
+        }).catch(() => {
+          if (isMounted) {
+            setIsAuthCheckComplete(true);
+            setIsGuestMode(true);
+          }
+        });
       }
-    }, 5000);
+    }, 3000);
     
     return () => {
       isMounted = false;
