@@ -113,15 +113,14 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
 
     setIsChangingPassword(true);
     try {
-      // Simulate API call for password change
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await User.updatePassword(passwordData.oldPassword, passwordData.newPassword);
       
       setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
       setShowPasswordForm(false);
-      toast.success('Password changed successfully!');
+      toast.success('Password changed successfully! Please log in again with your new password.');
     } catch (error) {
       console.error("Error changing password:", error);
-      toast.error('Failed to change password. Please check your old password.');
+      toast.error('Failed to change password. Please make sure you entered the correct current password.');
     } finally {
       setIsChangingPassword(false);
     }

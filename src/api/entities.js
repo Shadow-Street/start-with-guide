@@ -210,5 +210,42 @@ export const User = {
       email: user.email,
       ...profile
     };
+  },
+
+  async updateMyUserData(payload) {
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    
+    if (userError) throw userError;
+    if (!user) throw new Error('No user found');
+    
+    // Update profile data
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(payload)
+      .eq('id', user.id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
+  },
+
+  async updatePassword(currentPassword, newPassword) {
+    // Supabase requires re-authentication to change password
+    const { error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+    
+    if (error) throw error;
+    return { success: true };
+  },
+
+  async logout() {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    
+    // Redirect to login page
+    window.location.href = '/Login';
+    return { success: true };
   }
 };
