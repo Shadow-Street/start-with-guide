@@ -60,7 +60,7 @@ function InnerLayout({ children, currentPageName }) {
           const userId = session.user.id;
           
           // Fetch user profile from profiles table
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', userId)
@@ -70,8 +70,11 @@ function InnerLayout({ children, currentPageName }) {
             setUser({ id: userId, ...profile, email: session.user.email });
             setIsGuestMode(false);
 
-            // Fetch user roles
-            const roles = await getUserRoles(userId).catch(() => []);
+            // Fetch user roles with error handling
+            const roles = await getUserRoles(userId).catch((err) => {
+              console.error('Error fetching roles:', err);
+              return [];
+            });
             setUserRoles(roles);
 
             // Check subscription status
@@ -81,7 +84,10 @@ function InnerLayout({ children, currentPageName }) {
               const subs = await api.getSubscriptions({ 
                 user_id: userId, 
                 status: 'active' 
-              }).catch(() => []);
+              }).catch((err) => {
+                console.error('Error fetching subscriptions:', err);
+                return [];
+              });
               
               if (isMounted) {
                 setIsSubscribed(subs.length > 0);
@@ -92,6 +98,8 @@ function InnerLayout({ children, currentPageName }) {
                 setIsSubscribed(true);
               }
             }
+          } else if (profileError) {
+            console.error('Error fetching profile:', profileError);
           }
         } else {
           // No user logged in - enable guest mode
@@ -110,21 +118,49 @@ function InnerLayout({ children, currentPageName }) {
       }
     );
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!isMounted) return;
-      
-      // Trigger the auth state change handler
-      if (session) {
-        setSession(session);
-      } else {
+    // THEN check for existing session with timeout fallback
+    const initAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (!isMounted) return;
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          setIsAuthCheckComplete(true);
+          setIsGuestMode(true);
+          return;
+        }
+        
+        // If no session, immediately set guest mode
+        if (!session) {
+          setIsAuthCheckComplete(true);
+          setIsGuestMode(true);
+        }
+        // If session exists, the onAuthStateChange will handle it
+      } catch (err) {
+        console.error('Session check failed:', err);
+        if (isMounted) {
+          setIsAuthCheckComplete(true);
+          setIsGuestMode(true);
+        }
+      }
+    };
+
+    initAuth();
+
+    // Fallback timeout to prevent infinite loading
+    const timeout = setTimeout(() => {
+      if (isMounted && !isAuthCheckComplete) {
+        console.warn('Auth check timeout - enabling guest mode');
         setIsAuthCheckComplete(true);
         setIsGuestMode(true);
       }
-    });
+    }, 5000);
     
     return () => {
       isMounted = false;
+      clearTimeout(timeout);
       subscription.unsubscribe();
     };
   }, []);
