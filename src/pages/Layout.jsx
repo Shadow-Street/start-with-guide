@@ -66,14 +66,37 @@ function InnerLayout({ children, currentPageName }) {
             .eq('id', userId)
             .single();
           
-          if (profile && isMounted) {
+          if (profileError) {
+            console.error('Error fetching profile:', profileError);
+            
+            // If profile doesn't exist, create one
+            if (profileError.code === 'PGRST116') {
+              const { data: newProfile } = await supabase
+                .from('profiles')
+                .insert({
+                  id: userId,
+                  username: session.user.email?.split('@')[0],
+                  full_name: session.user.user_metadata?.full_name || '',
+                })
+                .select()
+                .single();
+              
+              if (newProfile && isMounted) {
+                setUser({ id: userId, ...newProfile, email: session.user.email });
+                setIsGuestMode(false);
+              }
+            }
+          } else if (profile && isMounted) {
             setUser({ id: userId, ...profile, email: session.user.email });
             setIsGuestMode(false);
-
+          }
+          
+          // Always fetch roles and subscription status for authenticated users
+          if (isMounted) {
             // Fetch user roles with error handling
             const roles = await getUserRoles(userId).catch((err) => {
               console.error('Error fetching roles:', err);
-              return [];
+              return ['user'];
             });
             setUserRoles(roles);
 
@@ -89,17 +112,11 @@ function InnerLayout({ children, currentPageName }) {
                 return [];
               });
               
-              if (isMounted) {
-                setIsSubscribed(subs.length > 0);
-              }
+              setIsSubscribed(subs.length > 0);
             } else {
               // Admins always have access
-              if (isMounted) {
-                setIsSubscribed(true);
-              }
+              setIsSubscribed(true);
             }
-          } else if (profileError) {
-            console.error('Error fetching profile:', profileError);
           }
         } else {
           // No user logged in - enable guest mode
