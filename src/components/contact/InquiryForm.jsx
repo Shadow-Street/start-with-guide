@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Send, Loader2 } from 'lucide-react';
+import { inquirySchema, safeValidate } from '@/lib/validation/schemas';
 
 export default function InquiryForm() {
   const [user, setUser] = useState(null);
@@ -50,19 +51,19 @@ export default function InquiryForm() {
   };
 
   const validateForm = () => {
-    if (!formData.full_name || !formData.email || !formData.subject || !formData.message) {
-      toast.error('Please fill in all required fields.');
+    // Validate form data with Zod schema
+    const validation = safeValidate(inquirySchema, formData);
+    
+    if (!validation.success) {
+      toast.error(validation.error);
       return false;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error('Please enter a valid email address.');
-      return false;
-    }
+    
     if (!isBotChecked) {
       toast.error('Please confirm you are not a robot.');
       return false;
     }
+    
     return true;
   };
 

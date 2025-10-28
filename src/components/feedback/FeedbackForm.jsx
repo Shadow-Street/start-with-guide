@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Send, Loader2, CheckCircle } from 'lucide-react';
+import { feedbackSchema, safeValidate } from '@/lib/validation/schemas';
 
 export default function FeedbackForm() {
   const [user, setUser] = useState(null);
@@ -48,10 +49,14 @@ export default function FeedbackForm() {
   };
 
   const validateForm = () => {
-    if (!formData.name || !formData.email || !formData.feedback_text) {
-      toast.error('Please fill in all required fields.');
+    // Validate form data with Zod schema
+    const validation = safeValidate(feedbackSchema, formData);
+    
+    if (!validation.success) {
+      toast.error(validation.error);
       return false;
     }
+    
     return true;
   };
 
