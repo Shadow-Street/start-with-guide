@@ -418,10 +418,32 @@ export const api = {
   // ============= SUBSCRIPTIONS =============
   getSubscriptions: async (filters = {}) => {
     if (useSupabase) {
-      if (Object.keys(filters).length > 0) {
-        return await Entities.Subscription.filter(filters, '-created_date');
+      try {
+        let query = supabase
+          .from('subscriptions')
+          .select('*')
+          .order('created_date', { ascending: false });
+
+        // Apply filters
+        if (filters.user_id) {
+          query = query.eq('user_id', filters.user_id);
+        }
+        if (filters.status) {
+          query = query.eq('status', filters.status);
+        }
+
+        const { data, error } = await query;
+        
+        if (error) {
+          console.error('Error fetching subscriptions:', error);
+          return [];
+        }
+        
+        return data || [];
+      } catch (err) {
+        console.error('Error in getSubscriptions:', err);
+        return [];
       }
-      return await Entities.Subscription.list();
     } else {
       const query = new URLSearchParams(filters);
       const res = await fetch(`/api/subscriptions?${query}`);
