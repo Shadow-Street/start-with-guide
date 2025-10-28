@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { AdCampaign, AdImpression, AdClick, User } from '@/api/entities';
+import { AdCampaign, AdImpression, AdClick } from '@/api/entities';
+import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink } from 'lucide-react';
@@ -31,9 +32,20 @@ export default function AdDisplay({
         
         const loadUser = async () => {
             try {
-                const user = await User.me();
-                if (mounted) {
-                    setCurrentUser(user);
+                const { data: { user } } = await supabase.auth.getUser();
+                if (mounted && user) {
+                    // Fetch profile for additional targeting data
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', user.id)
+                        .single();
+                    
+                    if (profile) {
+                        setCurrentUser({ id: user.id, ...profile });
+                    } else {
+                        setCurrentUser({ id: user.id, email: user.email });
+                    }
                 }
             } catch (error) {
                 if (mounted && !error.message?.includes('aborted')) {

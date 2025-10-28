@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { api } from "@/api";
-import { User } from "@/api/entities"; // Keep User.me() for auth
+import { User } from "@/api/entities"; // Keep for legacy compatibility
+import { supabase } from '@/integrations/supabase/client';
+import { getUserRoles } from '@/lib/security/auth';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -234,20 +236,23 @@ export default function Dashboard() {
     
     const checkUserRoleAndRedirect = async () => {
         try {
-            const currentUser = await User.me().catch(() => null);
+            // Use Supabase auth instead of Base44
+            const { data: { user } } = await supabase.auth.getUser();
             if (!isMounted || abortController.signal.aborted) return;
 
             // If user is authenticated, check role-based redirects
-            if (currentUser) {
-              if(currentUser?.app_role === 'finfluencer') {
+            if (user) {
+              const roles = await getUserRoles(user.id);
+              
+              if(roles.includes('finfluencer')) {
                   window.location.href = createPageUrl("FinfluencerDashboard");
                   return;
               }
-              if(currentUser?.app_role === 'vendor') {
+              if(roles.includes('vendor')) {
                   window.location.href = createPageUrl("VendorDashboard");
                   return;
               }
-              if(currentUser?.app_role === 'advisor' || currentUser?.app_role === 'educator') {
+              if(roles.includes('advisor') || roles.includes('educator')) {
                    window.location.href = createPageUrl("EntityDashboard");
                   return;
               }

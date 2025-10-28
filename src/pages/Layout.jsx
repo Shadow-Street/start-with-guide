@@ -53,11 +53,15 @@ function InnerLayout({ children, currentPageName }) {
       async (event, session) => {
         if (!isMounted) return;
 
+        console.log('🔐 Auth State Change:', event, session?.user?.email);
+
         setSession(session);
         
         if (session?.user) {
           // User is logged in
           const userId = session.user.id;
+          
+          console.log('✅ User authenticated:', userId);
           
           // Fetch user profile from profiles table
           const { data: profile, error: profileError } = await supabase
@@ -71,6 +75,7 @@ function InnerLayout({ children, currentPageName }) {
             
             // If profile doesn't exist, create one
             if (profileError.code === 'PGRST116') {
+              console.log('📝 Creating new profile...');
               const { data: newProfile } = await supabase
                 .from('profiles')
                 .insert({
@@ -82,11 +87,13 @@ function InnerLayout({ children, currentPageName }) {
                 .single();
               
               if (newProfile && isMounted) {
+                console.log('✅ Profile created');
                 setUser({ id: userId, ...newProfile, email: session.user.email });
                 setIsGuestMode(false);
               }
             }
           } else if (profile && isMounted) {
+            console.log('✅ Profile loaded');
             setUser({ id: userId, ...profile, email: session.user.email });
             setIsGuestMode(false);
           }
@@ -98,6 +105,7 @@ function InnerLayout({ children, currentPageName }) {
               console.error('Error fetching roles:', err);
               return ['user'];
             });
+            console.log('👤 User roles:', roles);
             setUserRoles(roles);
 
             // Check subscription status
@@ -121,6 +129,7 @@ function InnerLayout({ children, currentPageName }) {
         } else {
           // No user logged in - enable guest mode
           if (isMounted) {
+            console.log('👤 Guest mode enabled');
             setUser(null);
             setSession(null);
             setUserRoles([]);
