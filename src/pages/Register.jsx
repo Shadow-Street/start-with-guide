@@ -68,7 +68,7 @@ export default function Register() {
     setIsLoading(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/Dashboard`;
+      const redirectUrl = `${window.location.origin}/Login`;
 
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
