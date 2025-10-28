@@ -3528,6 +3528,684 @@ export type Database = {
         }
         Relationships: []
       }
+      pledge_access_requests: {
+        Row: {
+          admin_notes: string | null
+          annual_income_range: string | null
+          approval_conditions: string | null
+          broker: string | null
+          consent_given: boolean | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          demat_account_id: string
+          id: string
+          is_sample: boolean | null
+          rejection_reason: string | null
+          request_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          risk_score: number | null
+          status: string | null
+          trading_experience: string | null
+          updated_date: string | null
+          user_email: string | null
+          user_id: string
+          user_name: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          annual_income_range?: string | null
+          approval_conditions?: string | null
+          broker?: string | null
+          consent_given?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          demat_account_id: string
+          id: string
+          is_sample?: boolean | null
+          rejection_reason?: string | null
+          request_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_score?: number | null
+          status?: string | null
+          trading_experience?: string | null
+          updated_date?: string | null
+          user_email?: string | null
+          user_id: string
+          user_name?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          annual_income_range?: string | null
+          approval_conditions?: string | null
+          broker?: string | null
+          consent_given?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          demat_account_id?: string
+          id?: string
+          is_sample?: boolean | null
+          rejection_reason?: string | null
+          request_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          risk_score?: number | null
+          status?: string | null
+          trading_experience?: string | null
+          updated_date?: string | null
+          user_email?: string | null
+          user_id?: string
+          user_name?: string | null
+        }
+        Relationships: []
+      }
+      pledge_audit_logs: {
+        Row: {
+          action: string
+          actor_id: string
+          actor_role: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          error_message: string | null
+          id: string
+          ip_address: string | null
+          is_sample: boolean | null
+          payload_json: Json | null
+          success: boolean | null
+          target_pledge_id: string | null
+          target_session_id: string | null
+          target_type: string | null
+          updated_date: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          actor_role?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          error_message?: string | null
+          id: string
+          ip_address?: string | null
+          is_sample?: boolean | null
+          payload_json?: Json | null
+          success?: boolean | null
+          target_pledge_id?: string | null
+          target_session_id?: string | null
+          target_type?: string | null
+          updated_date?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          actor_role?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          error_message?: string | null
+          id?: string
+          ip_address?: string | null
+          is_sample?: boolean | null
+          payload_json?: Json | null
+          success?: boolean | null
+          target_pledge_id?: string | null
+          target_session_id?: string | null
+          target_type?: string | null
+          updated_date?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      pledge_execution_records: {
+        Row: {
+          broker_commission: number | null
+          broker_order_id: string | null
+          commission_rate: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          demat_account_id: string
+          error_message: string | null
+          executed_at: string | null
+          executed_price: number | null
+          executed_qty: number | null
+          execution_batch_id: string | null
+          id: string
+          is_sample: boolean | null
+          net_amount: number | null
+          platform_commission: number | null
+          pledge_id: string
+          pledged_qty: number
+          raw_broker_response: Json | null
+          session_id: string
+          settlement_date: string | null
+          side: string | null
+          status: string | null
+          stock_symbol: string
+          total_execution_value: number | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          broker_commission?: number | null
+          broker_order_id?: string | null
+          commission_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          demat_account_id: string
+          error_message?: string | null
+          executed_at?: string | null
+          executed_price?: number | null
+          executed_qty?: number | null
+          execution_batch_id?: string | null
+          id: string
+          is_sample?: boolean | null
+          net_amount?: number | null
+          platform_commission?: number | null
+          pledge_id: string
+          pledged_qty: number
+          raw_broker_response?: Json | null
+          session_id: string
+          settlement_date?: string | null
+          side?: string | null
+          status?: string | null
+          stock_symbol: string
+          total_execution_value?: number | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          broker_commission?: number | null
+          broker_order_id?: string | null
+          commission_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          demat_account_id?: string
+          error_message?: string | null
+          executed_at?: string | null
+          executed_price?: number | null
+          executed_qty?: number | null
+          execution_batch_id?: string | null
+          id?: string
+          is_sample?: boolean | null
+          net_amount?: number | null
+          platform_commission?: number | null
+          pledge_id?: string
+          pledged_qty?: number
+          raw_broker_response?: Json | null
+          session_id?: string
+          settlement_date?: string | null
+          side?: string | null
+          status?: string | null
+          stock_symbol?: string
+          total_execution_value?: number | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pledge_orders: {
+        Row: {
+          broker_order_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          executed_at: string | null
+          id: string
+          is_sample: boolean | null
+          notes: string | null
+          order_type: string | null
+          placed_at: string | null
+          pledge_id: string
+          price: number | null
+          qty: number
+          side: string | null
+          status: string | null
+          stock_symbol: string
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          broker_order_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          executed_at?: string | null
+          id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          order_type?: string | null
+          placed_at?: string | null
+          pledge_id: string
+          price?: number | null
+          qty: number
+          side?: string | null
+          status?: string | null
+          stock_symbol: string
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          broker_order_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          executed_at?: string | null
+          id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          order_type?: string | null
+          placed_at?: string | null
+          pledge_id?: string
+          price?: number | null
+          qty?: number
+          side?: string | null
+          status?: string | null
+          stock_symbol?: string
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pledge_payments: {
+        Row: {
+          amount: number
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          currency: string | null
+          gateway_response: Json | null
+          id: string
+          invoice_number: string | null
+          is_sample: boolean | null
+          payment_method: string | null
+          payment_provider: string | null
+          payment_ref: string | null
+          pledge_id: string
+          receipt_url: string | null
+          refund_amount: number | null
+          refund_reason: string | null
+          status: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          currency?: string | null
+          gateway_response?: Json | null
+          id: string
+          invoice_number?: string | null
+          is_sample?: boolean | null
+          payment_method?: string | null
+          payment_provider?: string | null
+          payment_ref?: string | null
+          pledge_id: string
+          receipt_url?: string | null
+          refund_amount?: number | null
+          refund_reason?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          currency?: string | null
+          gateway_response?: Json | null
+          id?: string
+          invoice_number?: string | null
+          is_sample?: boolean | null
+          payment_method?: string | null
+          payment_provider?: string | null
+          payment_ref?: string | null
+          pledge_id?: string
+          receipt_url?: string | null
+          refund_amount?: number | null
+          refund_reason?: string | null
+          status?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pledge_sessions: {
+        Row: {
+          allow_amo: boolean | null
+          buy_pledges_count: number | null
+          buy_pledges_value: number | null
+          capacity: number | null
+          commission_rate_override: number | null
+          convenience_fee_amount: number | null
+          convenience_fee_type: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          execution_notes: string | null
+          execution_reason: string | null
+          execution_rule: string | null
+          id: string
+          is_advisor_recommended: boolean | null
+          is_analyst_certified: boolean | null
+          is_sample: boolean | null
+          last_executed_at: string | null
+          max_qty: number | null
+          min_qty: number | null
+          notification_sent: boolean | null
+          sell_pledges_count: number | null
+          sell_pledges_value: number | null
+          session_end: string
+          session_mode: string | null
+          session_start: string
+          status: string | null
+          stock_name: string | null
+          stock_symbol: string
+          total_pledge_value: number | null
+          total_pledges: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          allow_amo?: boolean | null
+          buy_pledges_count?: number | null
+          buy_pledges_value?: number | null
+          capacity?: number | null
+          commission_rate_override?: number | null
+          convenience_fee_amount?: number | null
+          convenience_fee_type?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          execution_notes?: string | null
+          execution_reason?: string | null
+          execution_rule?: string | null
+          id: string
+          is_advisor_recommended?: boolean | null
+          is_analyst_certified?: boolean | null
+          is_sample?: boolean | null
+          last_executed_at?: string | null
+          max_qty?: number | null
+          min_qty?: number | null
+          notification_sent?: boolean | null
+          sell_pledges_count?: number | null
+          sell_pledges_value?: number | null
+          session_end: string
+          session_mode?: string | null
+          session_start: string
+          status?: string | null
+          stock_name?: string | null
+          stock_symbol: string
+          total_pledge_value?: number | null
+          total_pledges?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          allow_amo?: boolean | null
+          buy_pledges_count?: number | null
+          buy_pledges_value?: number | null
+          capacity?: number | null
+          commission_rate_override?: number | null
+          convenience_fee_amount?: number | null
+          convenience_fee_type?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          execution_notes?: string | null
+          execution_reason?: string | null
+          execution_rule?: string | null
+          id?: string
+          is_advisor_recommended?: boolean | null
+          is_analyst_certified?: boolean | null
+          is_sample?: boolean | null
+          last_executed_at?: string | null
+          max_qty?: number | null
+          min_qty?: number | null
+          notification_sent?: boolean | null
+          sell_pledges_count?: number | null
+          sell_pledges_value?: number | null
+          session_end?: string
+          session_mode?: string | null
+          session_start?: string
+          status?: string | null
+          stock_name?: string | null
+          stock_symbol?: string
+          total_pledge_value?: number | null
+          total_pledges?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      pledges: {
+        Row: {
+          admin_notes: string | null
+          consent_hash: string | null
+          convenience_fee_amount: number | null
+          convenience_fee_paid: boolean | null
+          convenience_fee_payment_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          demat_account_id: string
+          digital_consent: boolean | null
+          execution_notes: string | null
+          expected_execution_at: string | null
+          id: string
+          is_sample: boolean | null
+          price_target: number | null
+          qty: number
+          risk_acknowledgment: boolean | null
+          session_id: string
+          side: string | null
+          status: string | null
+          stock_symbol: string
+          trading_limits_validated: boolean | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          consent_hash?: string | null
+          convenience_fee_amount?: number | null
+          convenience_fee_paid?: boolean | null
+          convenience_fee_payment_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          demat_account_id: string
+          digital_consent?: boolean | null
+          execution_notes?: string | null
+          expected_execution_at?: string | null
+          id: string
+          is_sample?: boolean | null
+          price_target?: number | null
+          qty: number
+          risk_acknowledgment?: boolean | null
+          session_id: string
+          side?: string | null
+          status?: string | null
+          stock_symbol: string
+          trading_limits_validated?: boolean | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          consent_hash?: string | null
+          convenience_fee_amount?: number | null
+          convenience_fee_paid?: boolean | null
+          convenience_fee_payment_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          demat_account_id?: string
+          digital_consent?: boolean | null
+          execution_notes?: string | null
+          expected_execution_at?: string | null
+          id?: string
+          is_sample?: boolean | null
+          price_target?: number | null
+          qty?: number
+          risk_acknowledgment?: boolean | null
+          session_id?: string
+          side?: string | null
+          status?: string | null
+          stock_symbol?: string
+          trading_limits_validated?: boolean | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      poll_votes: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          poll_id: string
+          updated_date: string | null
+          user_id: string
+          vote: string
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          poll_id: string
+          updated_date?: string | null
+          user_id: string
+          vote: string
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          poll_id?: string
+          updated_date?: string | null
+          user_id?: string
+          vote?: string
+        }
+        Relationships: []
+      }
+      polls: {
+        Row: {
+          bearish_votes: number | null
+          bullish_votes: number | null
+          buy_votes: number | null
+          chatroom_id: string | null
+          confidence_score: number | null
+          created_by: string | null
+          created_by_admin: boolean | null
+          created_by_id: string | null
+          created_by_role: string | null
+          created_date: string | null
+          creation_source: string | null
+          description: string | null
+          expires_at: string | null
+          hold_votes: number | null
+          id: string
+          is_active: boolean | null
+          is_premium: boolean | null
+          is_sample: boolean | null
+          neutral_votes: number | null
+          no_votes: number | null
+          poll_type: string | null
+          sell_votes: number | null
+          stock_symbol: string | null
+          target_price: number | null
+          title: string
+          total_pledge_amount: number | null
+          total_pledges: number | null
+          total_votes: number | null
+          updated_date: string | null
+          yes_votes: number | null
+        }
+        Insert: {
+          bearish_votes?: number | null
+          bullish_votes?: number | null
+          buy_votes?: number | null
+          chatroom_id?: string | null
+          confidence_score?: number | null
+          created_by?: string | null
+          created_by_admin?: boolean | null
+          created_by_id?: string | null
+          created_by_role?: string | null
+          created_date?: string | null
+          creation_source?: string | null
+          description?: string | null
+          expires_at?: string | null
+          hold_votes?: number | null
+          id: string
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          neutral_votes?: number | null
+          no_votes?: number | null
+          poll_type?: string | null
+          sell_votes?: number | null
+          stock_symbol?: string | null
+          target_price?: number | null
+          title: string
+          total_pledge_amount?: number | null
+          total_pledges?: number | null
+          total_votes?: number | null
+          updated_date?: string | null
+          yes_votes?: number | null
+        }
+        Update: {
+          bearish_votes?: number | null
+          bullish_votes?: number | null
+          buy_votes?: number | null
+          chatroom_id?: string | null
+          confidence_score?: number | null
+          created_by?: string | null
+          created_by_admin?: boolean | null
+          created_by_id?: string | null
+          created_by_role?: string | null
+          created_date?: string | null
+          creation_source?: string | null
+          description?: string | null
+          expires_at?: string | null
+          hold_votes?: number | null
+          id?: string
+          is_active?: boolean | null
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          neutral_votes?: number | null
+          no_votes?: number | null
+          poll_type?: string | null
+          sell_votes?: number | null
+          stock_symbol?: string | null
+          target_price?: number | null
+          title?: string
+          total_pledge_amount?: number | null
+          total_pledges?: number | null
+          total_votes?: number | null
+          updated_date?: string | null
+          yes_votes?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -3555,6 +4233,60 @@ export type Database = {
           id?: string
           updated_at?: string
           username?: string
+        }
+        Relationships: []
+      }
+      profit_payout_schedules: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          fund_plan_id: string
+          id: string
+          is_sample: boolean | null
+          notes: string | null
+          payout_date: string
+          payout_frequency: string | null
+          processed_at: string | null
+          profit_rate: number
+          status: string | null
+          total_amount: number
+          total_investors: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id: string
+          id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payout_date: string
+          payout_frequency?: string | null
+          processed_at?: string | null
+          profit_rate: number
+          status?: string | null
+          total_amount: number
+          total_investors?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          fund_plan_id?: string
+          id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          payout_date?: string
+          payout_frequency?: string | null
+          processed_at?: string | null
+          profit_rate?: number
+          status?: string | null
+          total_amount?: number
+          total_investors?: number | null
+          updated_date?: string | null
         }
         Relationships: []
       }
