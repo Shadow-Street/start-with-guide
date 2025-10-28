@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_user_id: string | null
+          changes: Json | null
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          target_id: string | null
+          target_table: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id?: string | null
+          changes?: Json | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string | null
+          changes?: Json | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       comments: {
         Row: {
           content: string
@@ -89,6 +125,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      impersonation_sessions: {
+        Row: {
+          admin_user_id: string
+          created_at: string | null
+          ended_at: string | null
+          expires_at: string
+          id: string
+          session_token: string
+          target_user_id: string
+        }
+        Insert: {
+          admin_user_id: string
+          created_at?: string | null
+          ended_at?: string | null
+          expires_at: string
+          id?: string
+          session_token: string
+          target_user_id: string
+        }
+        Update: {
+          admin_user_id?: string
+          created_at?: string | null
+          ended_at?: string | null
+          expires_at?: string
+          id?: string
+          session_token?: string
+          target_user_id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -179,6 +245,19 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      log_admin_action: {
+        Args: {
+          _action: string
+          _changes?: Json
+          _target_id?: string
+          _target_table?: string
+        }
+        Returns: string
+      }
+      validate_impersonation_session: {
+        Args: { _session_token: string }
+        Returns: string
       }
     }
     Enums: {
