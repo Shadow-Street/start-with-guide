@@ -4818,6 +4818,93 @@ export type Database = {
         }
         Relationships: []
       }
+      vendors: {
+        Row: {
+          company_name: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          status: string | null
+          total_spent: number | null
+          updated_date: string | null
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          company_name: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          status?: string | null
+          total_spent?: number | null
+          updated_date?: string | null
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          company_name?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          status?: string | null
+          total_spent?: number | null
+          updated_date?: string | null
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      watchlist: {
+        Row: {
+          added_price: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          notes: string | null
+          stock_id: string | null
+          stock_name: string
+          stock_symbol: string
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          added_price?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          notes?: string | null
+          stock_id?: string | null
+          stock_name: string
+          stock_symbol: string
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          added_price?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          notes?: string | null
+          stock_id?: string | null
+          stock_name?: string
+          stock_symbol?: string
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
