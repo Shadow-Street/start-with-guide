@@ -1120,6 +1120,189 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_inquiries: {
+        Row: {
+          admin_notes: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          email: string
+          full_name: string
+          id: string
+          is_sample: boolean | null
+          message: string
+          mobile_number: string | null
+          status: string | null
+          subject: string
+          updated_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email: string
+          full_name: string
+          id: string
+          is_sample?: boolean | null
+          message: string
+          mobile_number?: string | null
+          status?: string | null
+          subject: string
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          is_sample?: boolean | null
+          message?: string
+          mobile_number?: string | null
+          status?: string | null
+          subject?: string
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      course_enrollments: {
+        Row: {
+          amount_paid: number
+          completion_date: string | null
+          course_id: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          enrollment_status: string | null
+          id: string
+          influencer_payout: number | null
+          is_sample: boolean | null
+          payment_id: string | null
+          platform_commission: number | null
+          rating: number | null
+          review: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_paid: number
+          completion_date?: string | null
+          course_id: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          enrollment_status?: string | null
+          id: string
+          influencer_payout?: number | null
+          is_sample?: boolean | null
+          payment_id?: string | null
+          platform_commission?: number | null
+          rating?: number | null
+          review?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_paid?: number
+          completion_date?: string | null
+          course_id?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          enrollment_status?: string | null
+          id?: string
+          influencer_payout?: number | null
+          is_sample?: boolean | null
+          payment_id?: string | null
+          platform_commission?: number | null
+          rating?: number | null
+          review?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      courses: {
+        Row: {
+          category: string | null
+          course_type: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          current_enrollments: number | null
+          curriculum: Json | null
+          description: string | null
+          difficulty_level: string | null
+          duration_hours: number | null
+          id: string
+          influencer_id: string
+          is_sample: boolean | null
+          max_participants: number | null
+          meeting_link: string | null
+          prerequisites: string | null
+          price: number
+          scheduled_date: string | null
+          status: string | null
+          title: string
+          total_revenue: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          category?: string | null
+          course_type?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_enrollments?: number | null
+          curriculum?: Json | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_hours?: number | null
+          id: string
+          influencer_id: string
+          is_sample?: boolean | null
+          max_participants?: number | null
+          meeting_link?: string | null
+          prerequisites?: string | null
+          price: number
+          scheduled_date?: string | null
+          status?: string | null
+          title: string
+          total_revenue?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          category?: string | null
+          course_type?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          current_enrollments?: number | null
+          curriculum?: Json | null
+          description?: string | null
+          difficulty_level?: string | null
+          duration_hours?: number | null
+          id?: string
+          influencer_id?: string
+          is_sample?: boolean | null
+          max_participants?: number | null
+          meeting_link?: string | null
+          prerequisites?: string | null
+          price?: number
+          scheduled_date?: string | null
+          status?: string | null
+          title?: string
+          total_revenue?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
       discussions: {
         Row: {
           content: string
@@ -1160,6 +1343,399 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      educators: {
+        Row: {
+          average_rating: number | null
+          bio: string | null
+          commission_override_rate: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          display_name: string
+          experience_years: number | null
+          id: string
+          is_sample: boolean | null
+          profile_image_url: string | null
+          qualifications: string | null
+          specialization: Json | null
+          status: string | null
+          total_courses: number | null
+          total_students: number | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          average_rating?: number | null
+          bio?: string | null
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name: string
+          experience_years?: number | null
+          id: string
+          is_sample?: boolean | null
+          profile_image_url?: string | null
+          qualifications?: string | null
+          specialization?: Json | null
+          status?: string | null
+          total_courses?: number | null
+          total_students?: number | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          average_rating?: number | null
+          bio?: string | null
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name?: string
+          experience_years?: number | null
+          id?: string
+          is_sample?: boolean | null
+          profile_image_url?: string | null
+          qualifications?: string | null
+          specialization?: Json | null
+          status?: string | null
+          total_courses?: number | null
+          total_students?: number | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      entity_configurations: {
+        Row: {
+          action_button_label: string | null
+          admin_visible: boolean | null
+          color: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          display_name: string
+          enabled: boolean | null
+          entity_name: string
+          icon_name: string | null
+          id: string
+          is_sample: boolean | null
+          management_enabled: boolean | null
+          sort_order: number | null
+          status_field: string | null
+          updated_date: string | null
+          user_visible: boolean | null
+        }
+        Insert: {
+          action_button_label?: string | null
+          admin_visible?: boolean | null
+          color?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          display_name: string
+          enabled?: boolean | null
+          entity_name: string
+          icon_name?: string | null
+          id: string
+          is_sample?: boolean | null
+          management_enabled?: boolean | null
+          sort_order?: number | null
+          status_field?: string | null
+          updated_date?: string | null
+          user_visible?: boolean | null
+        }
+        Update: {
+          action_button_label?: string | null
+          admin_visible?: boolean | null
+          color?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          display_name?: string
+          enabled?: boolean | null
+          entity_name?: string
+          icon_name?: string | null
+          id?: string
+          is_sample?: boolean | null
+          management_enabled?: boolean | null
+          sort_order?: number | null
+          status_field?: string | null
+          updated_date?: string | null
+          user_visible?: boolean | null
+        }
+        Relationships: []
+      }
+      event_attendees: {
+        Row: {
+          confirmed: boolean | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          event_id: string
+          id: string
+          is_sample: boolean | null
+          rsvp_status: string | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          confirmed?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          event_id: string
+          id: string
+          is_sample?: boolean | null
+          rsvp_status?: string | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          confirmed?: boolean | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          event_id?: string
+          id?: string
+          is_sample?: boolean | null
+          rsvp_status?: string | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      event_commission_tracking: {
+        Row: {
+          commission_override_rate: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          event_id: string
+          gross_revenue: number
+          id: string
+          is_sample: boolean | null
+          organizer_id: string
+          organizer_payout: number
+          organizer_role: string | null
+          payout_date: string | null
+          payout_status: string | null
+          platform_commission: number
+          platform_commission_rate: number
+          total_tickets_sold: number | null
+          updated_date: string | null
+        }
+        Insert: {
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          event_id: string
+          gross_revenue?: number
+          id: string
+          is_sample?: boolean | null
+          organizer_id: string
+          organizer_payout?: number
+          organizer_role?: string | null
+          payout_date?: string | null
+          payout_status?: string | null
+          platform_commission?: number
+          platform_commission_rate: number
+          total_tickets_sold?: number | null
+          updated_date?: string | null
+        }
+        Update: {
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          event_id?: string
+          gross_revenue?: number
+          id?: string
+          is_sample?: boolean | null
+          organizer_id?: string
+          organizer_payout?: number
+          organizer_role?: string | null
+          payout_date?: string | null
+          payout_status?: string | null
+          platform_commission?: number
+          platform_commission_rate?: number
+          total_tickets_sold?: number | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      event_organizers: {
+        Row: {
+          average_rating: number | null
+          bio: string | null
+          commission_override_rate: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          display_name: string
+          id: string
+          is_sample: boolean | null
+          organization_name: string | null
+          profile_image_url: string | null
+          status: string | null
+          total_attendees: number | null
+          total_events: number | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          average_rating?: number | null
+          bio?: string | null
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name: string
+          id: string
+          is_sample?: boolean | null
+          organization_name?: string | null
+          profile_image_url?: string | null
+          status?: string | null
+          total_attendees?: number | null
+          total_events?: number | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          average_rating?: number | null
+          bio?: string | null
+          commission_override_rate?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          display_name?: string
+          id?: string
+          is_sample?: boolean | null
+          organization_name?: string | null
+          profile_image_url?: string | null
+          status?: string | null
+          total_attendees?: number | null
+          total_events?: number | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      event_tickets: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          event_id: string
+          id: string
+          is_sample: boolean | null
+          payment_id: string | null
+          payment_method: string | null
+          purchased_date: string | null
+          status: string | null
+          ticket_price: number
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          event_id: string
+          id: string
+          is_sample?: boolean | null
+          payment_id?: string | null
+          payment_method?: string | null
+          purchased_date?: string | null
+          status?: string | null
+          ticket_price: number
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          event_id?: string
+          id?: string
+          is_sample?: boolean | null
+          payment_id?: string | null
+          payment_method?: string | null
+          purchased_date?: string | null
+          status?: string | null
+          ticket_price?: number
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          admin_notes: string | null
+          capacity: number | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          event_date: string
+          id: string
+          is_featured: boolean | null
+          is_premium: boolean | null
+          is_sample: boolean | null
+          location: string | null
+          organizer_id: string
+          organizer_name: string | null
+          status: string | null
+          ticket_price: number | null
+          title: string
+          updated_date: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          capacity?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          event_date: string
+          id: string
+          is_featured?: boolean | null
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          location?: string | null
+          organizer_id: string
+          organizer_name?: string | null
+          status?: string | null
+          ticket_price?: number | null
+          title: string
+          updated_date?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          capacity?: number | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          event_date?: string
+          id?: string
+          is_featured?: boolean | null
+          is_premium?: boolean | null
+          is_sample?: boolean | null
+          location?: string | null
+          organizer_id?: string
+          organizer_name?: string | null
+          status?: string | null
+          ticket_price?: number | null
+          title?: string
+          updated_date?: string | null
+        }
+        Relationships: []
       }
       impersonation_sessions: {
         Row: {
