@@ -3027,6 +3027,507 @@ export type Database = {
         }
         Relationships: []
       }
+      meetings: {
+        Row: {
+          chat_room_id: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          end_time: string | null
+          id: string
+          is_sample: boolean | null
+          max_participants: number | null
+          meeting_url: string
+          participant_count: number | null
+          start_time: string | null
+          status: string | null
+          stock_symbol: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          chat_room_id: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          end_time?: string | null
+          id: string
+          is_sample?: boolean | null
+          max_participants?: number | null
+          meeting_url: string
+          participant_count?: number | null
+          start_time?: string | null
+          status?: string | null
+          stock_symbol?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          chat_room_id?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          end_time?: string | null
+          id?: string
+          is_sample?: boolean | null
+          max_participants?: number | null
+          meeting_url?: string
+          participant_count?: number | null
+          start_time?: string | null
+          status?: string | null
+          stock_symbol?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          chat_room_id: string
+          content: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_sample: boolean | null
+          mentioned_stock: string | null
+          message_type: string | null
+          updated_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          chat_room_id: string
+          content: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_sample?: boolean | null
+          mentioned_stock?: string | null
+          message_type?: string | null
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          chat_room_id?: string
+          content?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_sample?: boolean | null
+          mentioned_stock?: string | null
+          message_type?: string | null
+          updated_date?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      moderation_logs: {
+        Row: {
+          action: string
+          chat_room_id: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          details: string | null
+          id: string
+          is_sample: boolean | null
+          moderator_id: string
+          moderator_name: string | null
+          reason: string | null
+          target_id: string | null
+          target_type: string | null
+          target_user_id: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          action: string
+          chat_room_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          details?: string | null
+          id: string
+          is_sample?: boolean | null
+          moderator_id: string
+          moderator_name?: string | null
+          reason?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          target_user_id?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          action?: string
+          chat_room_id?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          details?: string | null
+          id?: string
+          is_sample?: boolean | null
+          moderator_id?: string
+          moderator_name?: string | null
+          reason?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          target_user_id?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      module_approval_requests: {
+        Row: {
+          admin_notes: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          id: string
+          is_sample: boolean | null
+          justification: string | null
+          module_key: string
+          module_name: string
+          requested_by_id: string
+          requested_by_name: string | null
+          reviewed_at: string | null
+          reviewed_by_id: string | null
+          reviewed_by_name: string | null
+          status: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id: string
+          is_sample?: boolean | null
+          justification?: string | null
+          module_key: string
+          module_name: string
+          requested_by_id: string
+          requested_by_name?: string | null
+          reviewed_at?: string | null
+          reviewed_by_id?: string | null
+          reviewed_by_name?: string | null
+          status?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id?: string
+          is_sample?: boolean | null
+          justification?: string | null
+          module_key?: string
+          module_name?: string
+          requested_by_id?: string
+          requested_by_name?: string | null
+          reviewed_at?: string | null
+          reviewed_by_id?: string | null
+          reviewed_by_name?: string | null
+          status?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      news: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          is_sample: boolean | null
+          published_date: string | null
+          sentiment: string | null
+          source: string | null
+          source_url: string | null
+          stock_symbols: Json | null
+          summary: string | null
+          title: string
+          updated_date: string | null
+          view_count: number | null
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_sample?: boolean | null
+          published_date?: string | null
+          sentiment?: string | null
+          source?: string | null
+          source_url?: string | null
+          stock_symbols?: Json | null
+          summary?: string | null
+          title: string
+          updated_date?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_sample?: boolean | null
+          published_date?: string | null
+          sentiment?: string | null
+          source?: string | null
+          source_url?: string | null
+          stock_symbols?: Json | null
+          summary?: string | null
+          title?: string
+          updated_date?: string | null
+          view_count?: number | null
+        }
+        Relationships: []
+      }
+      notification_settings: {
+        Row: {
+          category: string
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          email_enabled: boolean | null
+          id: string
+          in_app_enabled: boolean | null
+          is_sample: boolean | null
+          push_enabled: boolean | null
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email_enabled?: boolean | null
+          id: string
+          in_app_enabled?: boolean | null
+          is_sample?: boolean | null
+          push_enabled?: boolean | null
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          email_enabled?: boolean | null
+          id?: string
+          in_app_enabled?: boolean | null
+          is_sample?: boolean | null
+          push_enabled?: boolean | null
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          category: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          id: string
+          is_read: boolean | null
+          is_sample: boolean | null
+          link_url: string | null
+          message: string
+          priority: string | null
+          title: string
+          updated_date: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id: string
+          is_read?: boolean | null
+          is_sample?: boolean | null
+          link_url?: string | null
+          message: string
+          priority?: string | null
+          title: string
+          updated_date?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          id?: string
+          is_read?: boolean | null
+          is_sample?: boolean | null
+          link_url?: string | null
+          message?: string
+          priority?: string | null
+          title?: string
+          updated_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payout_requests: {
+        Row: {
+          admin_notes: string | null
+          available_balance: number
+          bank_details: Json | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          is_sample: boolean | null
+          payout_method: string | null
+          paypal_email: string | null
+          processed_by: string | null
+          processed_date: string | null
+          requested_amount: number
+          status: string | null
+          transaction_reference: string | null
+          updated_date: string | null
+          upi_id: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          available_balance: number
+          bank_details?: Json | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id: string
+          is_sample?: boolean | null
+          payout_method?: string | null
+          paypal_email?: string | null
+          processed_by?: string | null
+          processed_date?: string | null
+          requested_amount: number
+          status?: string | null
+          transaction_reference?: string | null
+          updated_date?: string | null
+          upi_id?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          available_balance?: number
+          bank_details?: Json | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          is_sample?: boolean | null
+          payout_method?: string | null
+          paypal_email?: string | null
+          processed_by?: string | null
+          processed_date?: string | null
+          requested_amount?: number
+          status?: string | null
+          transaction_reference?: string | null
+          updated_date?: string | null
+          upi_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      permissions: {
+        Row: {
+          category: string | null
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          id: string
+          is_sample: boolean | null
+          permission_key: string
+          updated_date: string | null
+        }
+        Insert: {
+          category?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id: string
+          is_sample?: boolean | null
+          permission_key: string
+          updated_date?: string | null
+        }
+        Update: {
+          category?: string | null
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id?: string
+          is_sample?: boolean | null
+          permission_key?: string
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
+      platform_settings: {
+        Row: {
+          created_by: string | null
+          created_by_id: string | null
+          created_date: string | null
+          description: string | null
+          id: string
+          is_sample: boolean | null
+          setting_key: string
+          setting_value: string | null
+          updated_date: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id: string
+          is_sample?: boolean | null
+          setting_key: string
+          setting_value?: string | null
+          updated_date?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          created_by_id?: string | null
+          created_date?: string | null
+          description?: string | null
+          id?: string
+          is_sample?: boolean | null
+          setting_key?: string
+          setting_value?: string | null
+          updated_date?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
