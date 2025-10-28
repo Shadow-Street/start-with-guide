@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { api } from "@/api";
-import { User } from "@/api/entities"; // Keep User.me() for auth
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -35,29 +35,43 @@ export default function Profile() {
 
     const loadUserData = async () => {
       try {
-        // Try to get user
-        const currentUser = await User.me().catch(() => null);
+        // Get current user from Supabase session
+        const { data: { session } } = await supabase.auth.getSession();
 
         if (!isMounted) return;
 
-        if (currentUser) {
-          setUser(currentUser);
+        if (session?.user) {
+          const userId = session.user.id;
+          
+          // Fetch user profile from profiles table
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
 
-          // Load additional data for logged-in users
-          try {
-            const [userSubs, userReferrals] = await Promise.all([
-              api.getSubscriptions({ user_id: currentUser.id, status: 'active' }).catch(() => []),
-              api.getReferrals({ inviter_id: currentUser.id }).catch(() => [])
-            ]);
+          if (profile && isMounted) {
+            const currentUser = { 
+              id: userId, 
+              ...profile, 
+              email: session.user.email 
+            };
+            setUser(currentUser);
 
-            if (isMounted) {
-              setSubscription(userSubs[0] || null);
-              setReferrals(userReferrals);
-              // Note: ReferralBadge data loading for 'badges' state is removed here as per outline.
-              // 'badges' will remain an empty array unless loaded elsewhere or if component allows empty state.
+            // Load additional data for logged-in users
+            try {
+              const [userSubs, userReferrals] = await Promise.all([
+                api.getSubscriptions({ user_id: userId, status: 'active' }).catch(() => []),
+                api.getReferrals({ inviter_id: userId }).catch(() => [])
+              ]);
+
+              if (isMounted) {
+                setSubscription(userSubs[0] || null);
+                setReferrals(userReferrals);
+              }
+            } catch (error) {
+              console.log("Error loading additional user data:", error);
             }
-          } catch (error) {
-            console.log("Error loading additional user data:", error);
           }
         } else {
           // Guest user - show login/signup options
@@ -106,21 +120,23 @@ export default function Profile() {
             <p className="text-gray-600 mb-6">Log in or sign up to access your profile and personalized features</p>
 
             <div className="space-y-3">
-              <Button
-                onClick={() => {/* Implement login logic */}}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                <LogIn className="w-4 h-4 mr-2" />
-                Log In
-              </Button>
+              <Link to="/Login" className="block w-full">
+                <Button
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Log In
+                </Button>
+              </Link>
 
-              <Button
-                onClick={() => {/* Implement signup logic */}}
-                variant="outline"
-                className="w-full"
-              >
-                Create Free Account
-              </Button>
+              <Link to="/Register" className="block w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                >
+                  Create Free Account
+                </Button>
+              </Link>
             </div>
 
             <div className="mt-8 pt-6 border-t">

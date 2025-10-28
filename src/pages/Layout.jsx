@@ -24,92 +24,120 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Bell, LogOut, Settings, User as UserIcon, LayoutDashboard, MessageSquare, BarChart3, CalendarDays, Shield, Star, GraduationCap, Sparkles, Users, Wallet, Crown, ChevronDown, Edit3, LogIn } from "lucide-react";
-import { User, Subscription } from "@/api/entities";
+import { supabase } from "@/integrations/supabase/client";
+import { api } from "@/api";
 import RealtimeNotificationBell from "@/components/notifications/RealtimeNotificationBell";
 import { EntityConfigProvider } from "@/components/context/EntityConfigProvider";
 import { SubscriptionProvider } from "@/components/context/SubscriptionProvider";
+import { getUserRoles } from "@/lib/security/auth";
 
 function InnerLayout({ children, currentPageName }) {
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const [session, setSession] = useState(null);
   const [isAuthCheckComplete, setIsAuthCheckComplete] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isGuestMode, setIsGuestMode] = useState(false);
+  const [userRoles, setUserRoles] = useState([]);
 
-  const isPublicPage = ['/contact', '/Login', '/Signup'].includes(location.pathname);
+  const isPublicPage = ['/contact', '/Login', '/Register'].includes(location.pathname);
   
-  // Check if this is the SuperAdmin page - if yes, render without layout wrapper
+  // Check if this is the SuperAdmin page
   const isSuperAdminPage = location.pathname === createPageUrl('SuperAdmin') || currentPageName === 'SuperAdmin';
 
   useEffect(() => {
     let isMounted = true;
     
-    const checkAuth = async () => {
-      try {
-        const currentUser = await User.me().catch(() => null);
-        
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
         if (!isMounted) return;
+
+        setSession(session);
         
-        if (currentUser) {
-          setUser(currentUser);
-          setIsGuestMode(false);
+        if (session?.user) {
+          // User is logged in
+          const userId = session.user.id;
           
-          // Check subscription status
-          if (!['admin', 'super_admin'].includes(currentUser.app_role)) {
-            try {
-              const subs = await Subscription.filter({ 
-                user_id: currentUser.id, 
+          // Fetch user profile from profiles table
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', userId)
+            .single();
+          
+          if (profile && isMounted) {
+            setUser({ id: userId, ...profile, email: session.user.email });
+            setIsGuestMode(false);
+
+            // Fetch user roles
+            const roles = await getUserRoles(userId).catch(() => []);
+            setUserRoles(roles);
+
+            // Check subscription status
+            const isAdmin = roles.includes('super_admin') || roles.includes('admin');
+            
+            if (!isAdmin) {
+              const subs = await api.getSubscriptions({ 
+                user_id: userId, 
                 status: 'active' 
               }).catch(() => []);
               
               if (isMounted) {
                 setIsSubscribed(subs.length > 0);
               }
-            } catch (error) {
-              if (isMounted && error.message !== 'Request aborted') {
-                console.log("No active subscription");
-                setIsSubscribed(false);
+            } else {
+              // Admins always have access
+              if (isMounted) {
+                setIsSubscribed(true);
               }
-            }
-          } else {
-            // Admins always have access
-            if (isMounted) {
-              setIsSubscribed(true);
             }
           }
         } else {
           // No user logged in - enable guest mode
           if (isMounted) {
             setUser(null);
+            setSession(null);
+            setUserRoles([]);
             setIsSubscribed(false);
             setIsGuestMode(true);
           }
         }
-      } catch (error) {
-        if (isMounted && error.message !== 'Request aborted') {
-          console.log("User not authenticated - enabling guest mode");
-          setUser(null);
-          setIsSubscribed(false);
-          setIsGuestMode(true);
-        }
-      } finally {
+        
         if (isMounted) {
           setIsAuthCheckComplete(true);
         }
       }
-    };
-    
-    checkAuth();
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!isMounted) return;
+      
+      // Trigger the auth state change handler
+      if (session) {
+        setSession(session);
+      } else {
+        setIsAuthCheckComplete(true);
+        setIsGuestMode(true);
+      }
+    });
     
     return () => {
       isMounted = false;
+      subscription.unsubscribe();
     };
-  }, [location.pathname]);
+  }, []);
 
   const handleLogout = async () => {
     try {
-      await User.logout();
-      window.location.href = '/';
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+      setUserRoles([]);
+      setIsSubscribed(false);
+      setIsGuestMode(true);
+      window.location.href = '/Dashboard';
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -159,7 +187,7 @@ function InnerLayout({ children, currentPageName }) {
 
       // Advisors, Finfluencers, Educators - show for subscribed users or admins
       if (['advisors', 'finfluencers', 'educators'].includes(item.key)) {
-        return isSubscribed || (user && ['admin', 'super_admin'].includes(user.app_role));
+        return isSubscribed || userRoles.includes('admin') || userRoles.includes('super_admin');
       }
 
       return true;
@@ -167,7 +195,7 @@ function InnerLayout({ children, currentPageName }) {
 
     // Add subscription badge
     const itemsWithBadges = filteredItems.map(item => {
-      if (item.key === 'subscription' && user && !['admin', 'super_admin', 'vendor'].includes(user.app_role)) {
+      if (item.key === 'subscription' && user && !userRoles.includes('admin') && !userRoles.includes('super_admin') && !userRoles.includes('vendor')) {
         return {
           ...item,
           badge: isSubscribed ? {
@@ -183,7 +211,7 @@ function InnerLayout({ children, currentPageName }) {
     });
 
     // Add "Organize Events" for specific roles
-    if (user && ['advisor', 'finfluencer', 'educator'].includes(user.app_role)) {
+    if (user && (userRoles.includes('advisor') || userRoles.includes('finfluencer') || userRoles.includes('educator'))) {
       itemsWithBadges.splice(5, 0, {
         key: 'organize_events',
         title: 'Organize Events',
@@ -195,7 +223,7 @@ function InnerLayout({ children, currentPageName }) {
 
     return itemsWithBadges;
 
-  }, [user, isAuthCheckComplete, isSubscribed, isGuestMode]);
+  }, [user, isAuthCheckComplete, isSubscribed, isGuestMode, userRoles]);
 
   if (!isAuthCheckComplete) {
     return (
@@ -205,10 +233,22 @@ function InnerLayout({ children, currentPageName }) {
     );
   }
 
-  // ✅ If SuperAdmin page, render children without layout wrapper AND without auth check
+  // Check SuperAdmin authentication
   if (isSuperAdminPage) {
-    // ⚠️ AUTHENTICATION DISABLED FOR TESTING - RE-ENABLE FOR PRODUCTION
-    return <>{children}</>;
+    // Require authentication for SuperAdmin
+    if (!isAuthCheckComplete) {
+      return <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>;
+    }
+    
+    if (!user || !userRoles.includes('super_admin')) {
+      // Redirect to login if not authenticated or not super_admin
+      window.location.href = '/Login';
+      return null;
+    }
+    
+    return <div className="min-h-screen bg-slate-50">{children}</div>;
   }
 
   return (
@@ -263,7 +303,7 @@ function InnerLayout({ children, currentPageName }) {
                       <p className="text-xs text-white/80 mt-1">Exploring the platform</p>
                     </div>
                   </div>
-                  <Link to={createPageUrl("Profile")}>
+                  <Link to="/Login">
                     <div className="mt-3 bg-white/20 hover:bg-white/30 rounded-lg px-3 py-2 text-center cursor-pointer transition-all">
                       <span className="text-xs font-semibold flex items-center justify-center gap-2">
                         <LogIn className="w-3 h-3" />
@@ -393,7 +433,7 @@ function InnerLayout({ children, currentPageName }) {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link to={createPageUrl("Profile")}>
+              <Link to="/Login">
                 <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 cursor-pointer transition-all text-white">
                   <LogIn className="w-5 h-5" />
                   <span className="font-semibold">Login / Sign Up</span>

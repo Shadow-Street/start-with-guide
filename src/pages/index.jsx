@@ -80,6 +80,10 @@ import MyEvents from "./MyEvents";
 
 import FixSidebarOrder from "./FixSidebarOrder";
 
+import Login from "./Login";
+
+import Register from "./Register";
+
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 const PAGES = {
@@ -163,6 +167,10 @@ const PAGES = {
     MyEvents: MyEvents,
     
     FixSidebarOrder: FixSidebarOrder,
+    
+    Login: Login,
+    
+    Register: Register,
     
 }
 
@@ -270,6 +278,10 @@ function PagesContent() {
                 <Route path="/MyEvents" element={<MyEvents />} />
                 
                 <Route path="/FixSidebarOrder" element={<FixSidebarOrder />} />
+                
+                <Route path="/Login" element={<Login />} />
+                
+                <Route path="/Register" element={<Register />} />
                 
             </Routes>
         </Layout>
