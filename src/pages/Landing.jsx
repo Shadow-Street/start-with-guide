@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
@@ -26,18 +26,15 @@ import LandingFooter from "@/components/landing/LandingFooter";
 
 export default function Landing() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading } = useAuth();
 
   useEffect(() => {
-    if (user) {
+    if (!isLoading && user) {
       navigate("/Dashboard");
-    } else {
-      setLoading(false);
     }
-  }, [user, navigate]);
+  }, [user, isLoading, navigate]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
