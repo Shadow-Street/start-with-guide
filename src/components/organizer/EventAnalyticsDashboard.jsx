@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { base44 } from '@/api/base44Client';
+import { EventAttendee, EventTicket } from '@/api/entities';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -25,10 +25,10 @@ export default function EventAnalyticsDashboard({ events, commissionTracking }) 
     try {
       setIsLoading(true);
       const attendeePromises = events.map(event =>
-        base44.entities.EventAttendee.filter({ event_id: event.id })
+        EventAttendee.filter({ event_id: event.id })
       );
       const ticketPromises = events.map(event =>
-        base44.entities.EventTicket.filter({ event_id: event.id })
+        EventTicket.filter({ event_id: event.id })
       );
 
       const [attendeesResults, ticketsResults] = await Promise.all([

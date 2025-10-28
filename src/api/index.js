@@ -529,6 +529,6 @@ export const api = {
 };
 
 // Legacy exports for backward compatibility (components not yet refactored)
-export { base44 } from './base44Client';
+// Base44 SDK removed - now using Supabase only
 export * from './entities';
 export * from './integrations';

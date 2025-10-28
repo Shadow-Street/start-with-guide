@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { base44 } from '@/api/base44Client';
+import { User, PledgeAccessRequest } from '@/api/entities';
 import MyPledgePortfolio from '../components/pledges/MyPledgePortfolio';
 import LockedPledgeTab from '../components/pledges/LockedPledgeTab';
 import PledgeAccessModal from '../components/pledges/PledgeAccessModal';
 import { Loader2, Wallet } from 'lucide-react';
-import { PledgeAccessRequest } from '@/api/entities';
 
 export default function PledgePool() {
     const [user, setUser] = useState(null);
@@ -15,7 +14,7 @@ export default function PledgePool() {
     const loadData = useCallback(async () => {
         setIsLoading(true);
         try {
-            const currentUser = await base44.auth.me();
+            const currentUser = await User.me();
             setUser(currentUser);
             if (currentUser && !currentUser.has_pledge_access) {
                 const requests = await PledgeAccessRequest.filter({ user_id: currentUser.id }, '-created_date', 1);

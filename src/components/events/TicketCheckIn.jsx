@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { EventAttendee, EventTicket } from '@/api/entities';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,8 +29,8 @@ export default function TicketCheckIn({ event, open, onClose, onUpdate }) {
     try {
       setIsLoading(true);
       const [attendeesData, ticketsData] = await Promise.all([
-        base44.entities.EventAttendee.filter({ event_id: event.id }),
-        base44.entities.EventTicket.filter({ event_id: event.id, status: 'active' })
+        EventAttendee.filter({ event_id: event.id }),
+        EventTicket.filter({ event_id: event.id, status: 'active' })
       ]);
 
       setAttendees(attendeesData);

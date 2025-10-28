@@ -1,26 +1,24 @@
-import { base44 } from './base44Client';
+/**
+ * Integration Utilities
+ * Placeholder for future integrations (email, AI, file uploads, etc.)
+ * TODO: Implement Supabase Edge Functions or third-party integrations
+ */
 
+// Placeholder for Core integrations
+export const Core = {
+  InvokeLLM: null,
+  SendEmail: null,
+  UploadFile: null,
+  GenerateImage: null,
+  ExtractDataFromUploadedFile: null,
+  CreateFileSignedUrl: null,
+  UploadPrivateFile: null,
+};
 
-
-
-export const Core = base44.integrations.Core;
-
-export const InvokeLLM = base44.integrations.Core.InvokeLLM;
-
-export const SendEmail = base44.integrations.Core.SendEmail;
-
-export const UploadFile = base44.integrations.Core.UploadFile;
-
-export const GenerateImage = base44.integrations.Core.GenerateImage;
-
-export const ExtractDataFromUploadedFile = base44.integrations.Core.ExtractDataFromUploadedFile;
-
-export const CreateFileSignedUrl = base44.integrations.Core.CreateFileSignedUrl;
-
-export const UploadPrivateFile = base44.integrations.Core.UploadPrivateFile;
-
-
-
-
-
-
+export const InvokeLLM = Core.InvokeLLM;
+export const SendEmail = Core.SendEmail;
+export const UploadFile = Core.UploadFile;
+export const GenerateImage = Core.GenerateImage;
+export const ExtractDataFromUploadedFile = Core.ExtractDataFromUploadedFile;
+export const CreateFileSignedUrl = Core.CreateFileSignedUrl;
+export const UploadPrivateFile = Core.UploadPrivateFile;

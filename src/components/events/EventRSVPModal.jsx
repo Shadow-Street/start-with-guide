@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { EventAttendee, EventTicket } from '@/api/entities';
 import {
   Dialog,
   DialogContent,
@@ -28,9 +28,9 @@ export default function EventRSVPModal({ event, open, onClose }) {
     try {
       setIsLoading(true);
       const [attendeesData, ticketsData] = await Promise.all([
-        base44.entities.EventAttendee.filter({ event_id: event.id }),
+        EventAttendee.filter({ event_id: event.id }),
         event.is_premium && event.ticket_price > 0 
-          ? base44.entities.EventTicket.filter({ event_id: event.id, status: 'active' })
+          ? EventTicket.filter({ event_id: event.id, status: 'active' })
           : Promise.resolve([])
       ]);
 
