@@ -76,24 +76,44 @@ function InnerLayout({ children, currentPageName }) {
               .single();
             
             if (newProfile && isMounted) {
-              setUser({ id: userId, ...newProfile, email: session.user.email });
+              // Load roles for new profile
+              const roles = await getUserRoles(userId).catch(() => ['user']);
+              const userWithRoles = { 
+                id: userId, 
+                ...newProfile, 
+                email: session.user.email,
+                roles: roles,
+                primaryRole: roles[0] || 'user',
+                app_role: roles[0] || 'user'
+              };
+              setUser(userWithRoles);
+              setUserRoles(roles);
               setIsGuestMode(false);
             }
           }
         } else if (profile && isMounted) {
-          setUser({ id: userId, ...profile, email: session.user.email });
-          setIsGuestMode(false);
-        }
-        
-        // Load roles and subscription in parallel for speed
-        if (isMounted) {
-          const [roles, isAdmin] = await Promise.all([
-            getUserRoles(userId).catch(() => ['user']),
-            getUserRoles(userId).then(r => r.includes('super_admin') || r.includes('admin')).catch(() => false)
-          ]);
+          // Load roles first
+          const roles = await getUserRoles(userId).catch(() => ['user']);
+          const isAdmin = roles.includes('super_admin') || roles.includes('admin');
           
+          // Create user object with roles included
+          const userWithRoles = { 
+            id: userId, 
+            ...profile, 
+            email: session.user.email,
+            roles: roles,
+            primaryRole: roles.includes('super_admin') ? 'super_admin' : 
+                        roles.includes('admin') ? 'admin' : 
+                        roles.includes('moderator') ? 'moderator' : 'user',
+            app_role: roles.includes('super_admin') ? 'super_admin' : 
+                     roles.includes('admin') ? 'admin' : 
+                     roles.includes('moderator') ? 'moderator' : 'user'
+          };
+          
+          setUser(userWithRoles);
           setUserRoles(roles);
-
+          setIsGuestMode(false);
+          
           // Check subscription only if not admin
           if (!isAdmin) {
             api.getSubscriptions({ user_id: userId, status: 'active' })

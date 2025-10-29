@@ -41,9 +41,13 @@ export function usePageConfig() {
       case 'subscribed_user':
         return !!user && isSubscribed;
       case 'admin_only':
-        return user && ['admin', 'super_admin'].includes(user.app_role);
+        return user && (user.roles?.includes('admin') || user.roles?.includes('super_admin') || 
+                       ['admin', 'super_admin'].includes(user.app_role) || 
+                       ['admin', 'super_admin'].includes(user.primaryRole));
       case 'super_admin_only':
-        return user && user.app_role === 'super_admin';
+        return user && (user.roles?.includes('super_admin') || 
+                       user.app_role === 'super_admin' || 
+                       user.primaryRole === 'super_admin');
       default:
         return !!user;
     }

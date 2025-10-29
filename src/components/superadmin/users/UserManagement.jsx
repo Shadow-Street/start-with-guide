@@ -26,18 +26,30 @@ export default function UserManagement({ user: currentAdmin, refreshEntityConfig
   const [isInviteModalOpen, setInviteModalOpen] = useState(false);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
 
-  // Permission check
-  const permissions = useMemo(() => ({
-    isSuperAdmin: currentAdmin?.app_role === 'super_admin',
-    isAdmin: ['super_admin', 'admin'].includes(currentAdmin?.app_role),
-    canViewUsers: ['super_admin', 'admin', 'user_management_sub_admin'].includes(currentAdmin?.app_role),
-    canEditUsers: ['super_admin', 'admin'].includes(currentAdmin?.app_role),
-    canManageRoles: currentAdmin?.app_role === 'super_admin',
-    canViewAudit: ['super_admin', 'admin'].includes(currentAdmin?.app_role), // Keep this permission for other potential uses if needed
-    canInviteUsers: ['super_admin', 'admin'].includes(currentAdmin?.app_role),
-    canCreateUsers: currentAdmin?.app_role === 'super_admin', // Only SuperAdmins can create
-    canAuditSubscriptions: ['super_admin', 'admin'].includes(currentAdmin?.app_role), // New permission
-  }), [currentAdmin]);
+  // Permission check using roles array
+  const permissions = useMemo(() => {
+    const roles = currentAdmin?.roles || [];
+    const primaryRole = currentAdmin?.primaryRole || currentAdmin?.app_role || 'user';
+    
+    return {
+      isSuperAdmin: roles.includes('super_admin') || primaryRole === 'super_admin',
+      isAdmin: roles.includes('super_admin') || roles.includes('admin') || 
+               ['super_admin', 'admin'].includes(primaryRole),
+      canViewUsers: roles.includes('super_admin') || roles.includes('admin') || 
+                    roles.includes('user_management_sub_admin') ||
+                    ['super_admin', 'admin', 'user_management_sub_admin'].includes(primaryRole),
+      canEditUsers: roles.includes('super_admin') || roles.includes('admin') ||
+                   ['super_admin', 'admin'].includes(primaryRole),
+      canManageRoles: roles.includes('super_admin') || primaryRole === 'super_admin',
+      canViewAudit: roles.includes('super_admin') || roles.includes('admin') ||
+                   ['super_admin', 'admin'].includes(primaryRole),
+      canInviteUsers: roles.includes('super_admin') || roles.includes('admin') ||
+                     ['super_admin', 'admin'].includes(primaryRole),
+      canCreateUsers: roles.includes('super_admin') || primaryRole === 'super_admin',
+      canAuditSubscriptions: roles.includes('super_admin') || roles.includes('admin') ||
+                            ['super_admin', 'admin'].includes(primaryRole),
+    };
+  }, [currentAdmin]);
 
   const loadAllData = useCallback(async (adminUser) => {
     if (!adminUser) return;

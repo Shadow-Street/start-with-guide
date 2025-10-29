@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { User } from '@/api/entities';
 import { createPageUrl } from '@/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { getUserRoles } from '@/lib/security/auth';
 import {
   LayoutDashboard,
   Users,
@@ -153,32 +155,53 @@ export default function SuperAdmin() {
 
     const loadData = async () => {
       try {
-        // Get current user from Supabase
-        const currentUser = await User.me().catch(() => null);
+        // Get current user with roles
+        const { data: { user: authUser } } = await supabase.auth.getUser();
         
-        if (isMounted && currentUser) {
-          setUser(currentUser);
+        if (!authUser) {
+          if (isMounted) setIsLoading(false);
+          return;
+        }
+        
+        // Get profile data
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', authUser.id)
+          .single();
+        
+        // Get user roles from user_roles table
+        const roles = await getUserRoles(authUser.id).catch(() => ['user']);
+        
+        if (isMounted && profile) {
+          const userWithRoles = {
+            id: authUser.id,
+            ...profile,
+            email: authUser.email,
+            roles: roles,
+            primaryRole: roles.includes('super_admin') ? 'super_admin' : 
+                        roles.includes('admin') ? 'admin' : 
+                        roles.includes('moderator') ? 'moderator' : 'user',
+            app_role: roles.includes('super_admin') ? 'super_admin' : 
+                     roles.includes('admin') ? 'admin' : 
+                     roles.includes('moderator') ? 'moderator' : 'user'
+          };
+          setUser(userWithRoles);
         }
 
         // Load platform stats with error handling
         try {
           const [users] = await Promise.all([
             User.list().catch(() => []),
-            // Add your other data fetches here with .catch(() => [])
-            // Example: fetchFeedbackCount().catch(() => 0),
-            // Example: fetchAlertsCount().catch(() => 0),
           ]);
 
           if (isMounted) {
             setPlatformStats({
               totalUsers: users.length,
-              pendingModeration: 0, // Placeholder, fetch actual data if available
-              totalRevenue: 240000, // Placeholder
-              pendingAdvisors: 0 // Placeholder
+              pendingModeration: 0,
+              totalRevenue: 240000,
+              pendingAdvisors: 0
             });
-            // Update unread counts if fetched
-            // setUnreadFeedbackCount(feedback);
-            // setUnreadAlertsCount(alerts);
           }
         } catch (error) {
           console.warn("Error loading stats, using defaults:", error);
@@ -206,7 +229,7 @@ export default function SuperAdmin() {
     return () => {
       isMounted = false;
     };
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   const renderContent = () => {
     // Ensure entityConfigs is an array before trying to find

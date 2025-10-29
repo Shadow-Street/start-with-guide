@@ -4211,8 +4211,11 @@ export type Database = {
           avatar_url: string | null
           bio: string | null
           created_at: string
+          display_name: string | null
           full_name: string | null
           id: string
+          mobile_number: string | null
+          profile_image_url: string | null
           updated_at: string
           username: string
         }
@@ -4220,8 +4223,11 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          display_name?: string | null
           full_name?: string | null
           id: string
+          mobile_number?: string | null
+          profile_image_url?: string | null
           updated_at?: string
           username: string
         }
@@ -4229,8 +4235,11 @@ export type Database = {
           avatar_url?: string | null
           bio?: string | null
           created_at?: string
+          display_name?: string | null
           full_name?: string | null
           id?: string
+          mobile_number?: string | null
+          profile_image_url?: string | null
           updated_at?: string
           username?: string
         }
