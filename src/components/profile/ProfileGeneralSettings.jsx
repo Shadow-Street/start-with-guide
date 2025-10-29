@@ -54,14 +54,37 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
   };
 
   const handleUpload = async () => {
-    if (!newImage) return;
+    if (!newImage) {
+      toast.error('Please select an image first');
+      return;
+    }
+    
     setIsUploading(true);
     try {
+      // Upload the file to Supabase storage
       const { file_url } = await UploadFile({ file: newImage });
-      await User.updateMyUserData({ profile_image_url: file_url });
-      onUserUpdate({ ...user, profile_image_url: file_url });
-      toast.success('Profile picture updated successfully!');
-      setNewImage(null);
+      
+      if (!file_url) {
+        throw new Error('File upload failed - no URL returned');
+      }
+      
+      // Update the profile with the new image URL
+      const updatedProfile = await User.updateMyUserData({ profile_image_url: file_url });
+      
+      if (updatedProfile) {
+        // Update local state with the new data
+        onUserUpdate({ ...user, profile_image_url: file_url });
+        setNewImage(null);
+        
+        // Reset file input
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+        
+        toast.success('Profile picture updated successfully!');
+      } else {
+        throw new Error('Profile update returned no data');
+      }
     } catch (error) {
       console.error("Error uploading file:", error);
       toast.error(error.message || 'Failed to upload image. Please try again.');
@@ -71,12 +94,14 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
   };
 
   const handleSaveDisplayName = async () => {
-    if (!displayName.trim()) {
+    const trimmedName = displayName.trim();
+    
+    if (!trimmedName) {
       toast.error('Display name cannot be empty');
       return;
     }
     
-    if (displayName.trim() === user?.display_name) {
+    if (trimmedName === user?.display_name) {
       toast.info('No changes to save');
       setIsEditingName(false);
       return;
@@ -84,9 +109,10 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
     
     setIsSavingName(true);
     try {
-      const result = await User.updateMyUserData({ display_name: displayName.trim() });
-      if (result) {
-        onUserUpdate({ ...user, display_name: displayName.trim() });
+      const updatedProfile = await User.updateMyUserData({ display_name: trimmedName });
+      
+      if (updatedProfile) {
+        onUserUpdate({ ...user, display_name: trimmedName });
         setIsEditingName(false);
         toast.success('Display name updated successfully!');
       } else {
@@ -145,7 +171,16 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
     
     setIsSendingOtp(true);
     try {
+      // Generate a 6-digit OTP
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+      
+      // Store OTP in session storage for verification
+      sessionStorage.setItem('mobile_otp', generatedOtp);
+      sessionStorage.setItem('mobile_otp_expiry', (Date.now() + 5 * 60 * 1000).toString());
+      sessionStorage.setItem('mobile_number_pending', tempMobileNumber);
+      
+      // In a real app, send OTP via SMS. For now, we'll show it in console and email
+      console.log('OTP for mobile verification:', generatedOtp);
       
       await SendEmail({
         to: user.email,
@@ -153,52 +188,65 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
         body: `Your OTP for mobile number verification is: ${generatedOtp}. This OTP is valid for 5 minutes.`
       });
 
-      window.tempOtp = generatedOtp;
-      window.otpExpiry = Date.now() + 5 * 60 * 1000;
-
       setOtpSent(true);
       setOtpCooldown(60);
-      toast.success(`OTP sent to ${user.email}. Please check your inbox and spam folder.`);
+      toast.success(`OTP sent! Check your email (${user.email}) or console for the verification code.`);
     } catch (error) {
       console.error("Error sending OTP:", error);
-      toast.error('Failed to send OTP. Please verify your email and try again.');
+      toast.error('Failed to send OTP. Please try again.');
     } finally {
       setIsSendingOtp(false);
     }
   };
 
   const handleVerifyOtp = async () => {
-    if (!otp) {
-      toast.error('Please enter the OTP');
+    if (!otp || otp.length !== 6) {
+      toast.error('Please enter the 6-digit OTP');
       return;
     }
 
-    if (Date.now() > window.otpExpiry) {
-      toast.error('OTP has expired. Please request a new one.');
+    const storedOtp = sessionStorage.getItem('mobile_otp');
+    const otpExpiry = sessionStorage.getItem('mobile_otp_expiry');
+    const pendingNumber = sessionStorage.getItem('mobile_number_pending');
+
+    if (!storedOtp || !otpExpiry || !pendingNumber) {
+      toast.error('OTP session expired. Please request a new OTP.');
       setOtpSent(false);
       setOtp('');
       return;
     }
 
-    if (otp !== window.tempOtp) {
+    if (Date.now() > parseInt(otpExpiry)) {
+      toast.error('OTP has expired. Please request a new one.');
+      sessionStorage.removeItem('mobile_otp');
+      sessionStorage.removeItem('mobile_otp_expiry');
+      sessionStorage.removeItem('mobile_number_pending');
+      setOtpSent(false);
+      setOtp('');
+      return;
+    }
+
+    if (otp !== storedOtp) {
       toast.error('Invalid OTP. Please check and try again.');
       return;
     }
 
     setIsVerifyingOtp(true);
     try {
-      const result = await User.updateMyUserData({ mobile_number: tempMobileNumber });
-      if (result) {
-        onUserUpdate({ ...user, mobile_number: tempMobileNumber });
-        
-        setMobileNumber(tempMobileNumber);
+      const updatedProfile = await User.updateMyUserData({ mobile_number: pendingNumber });
+      
+      if (updatedProfile) {
+        onUserUpdate({ ...user, mobile_number: pendingNumber });
+        setMobileNumber(pendingNumber);
         setIsEditingMobile(false);
         setOtpSent(false);
         setOtp('');
         setTempMobileNumber('');
         
-        delete window.tempOtp;
-        delete window.otpExpiry;
+        // Clear session storage
+        sessionStorage.removeItem('mobile_otp');
+        sessionStorage.removeItem('mobile_otp_expiry');
+        sessionStorage.removeItem('mobile_number_pending');
         
         toast.success('Mobile number updated successfully!');
       } else {
@@ -217,8 +265,10 @@ export default function ProfileGeneralSettings({ user, onUserUpdate }) {
     setOtpSent(false);
     setOtp('');
     setTempMobileNumber('');
-    delete window.tempOtp;
-    delete window.otpExpiry;
+    // Clear session storage
+    sessionStorage.removeItem('mobile_otp');
+    sessionStorage.removeItem('mobile_otp_expiry');
+    sessionStorage.removeItem('mobile_number_pending');
   };
 
   const handleLogout = async () => {

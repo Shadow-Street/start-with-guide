@@ -190,8 +190,25 @@ export const TypingIndicator = createEntity('typing_indicators');
 export const Ticket = createEntity('tickets');
 export const SubEntity = createEntity('subscriptions');
 
+// Profile entity for user profiles
+export const Profile = createEntity('profiles');
+
 // User auth wrapper using Supabase
 export const User = {
+  async list(orderBy = '-created_at') {
+    // Fetch all profiles with their auth data
+    const isDescending = orderBy.startsWith('-');
+    const column = isDescending ? orderBy.slice(1) : orderBy;
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order(column, { ascending: !isDescending });
+    
+    if (error) throw error;
+    return data || [];
+  },
+
   async me() {
     const { data: { user }, error } = await supabase.auth.getUser();
     
@@ -221,10 +238,15 @@ export const User = {
     // Update profile data
     const { data, error } = await supabase
       .from('profiles')
-      .update(payload)
-      .eq('id', user.id)
+      .upsert({
+        id: user.id,
+        ...payload,
+        updated_at: new Date().toISOString()
+      }, {
+        onConflict: 'id'
+      })
       .select()
-      .maybeSingle();
+      .single();
     
     if (error) throw error;
     return data;

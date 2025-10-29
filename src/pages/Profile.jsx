@@ -44,17 +44,20 @@ export default function Profile() {
           const userId = session.user.id;
           
           // Fetch user profile from profiles table
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
             .eq('id', userId)
-            .single();
+            .maybeSingle();
 
-          if (profile && isMounted) {
+          if (isMounted) {
             const currentUser = { 
               id: userId, 
-              ...profile, 
-              email: session.user.email 
+              email: session.user.email,
+              display_name: profile?.display_name || session.user.email?.split('@')[0] || 'User',
+              profile_image_url: profile?.profile_image_url || null,
+              mobile_number: profile?.mobile_number || null,
+              ...profile
             };
             setUser(currentUser);
 
