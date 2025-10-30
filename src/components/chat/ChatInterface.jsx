@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Message, User, TrustScoreLog, ModerationLog, Poll, PollVote, MessageReaction, TypingIndicator as TypingIndicatorEntity } from "@/api/entities";
+import { Message, User, TrustScoreLog, ModerationLog, Poll, PollVote, MessageReaction, TypingIndicator as TypingIndicatorEntity, MessageReadReceipt } from "@/api/entities";
 import { UploadFile } from "@/api/integrations";
+import { useRealtimeMessages } from './hooks/useRealtimeMessages';
+import { useUserPresence } from './hooks/useUserPresence';
 import { MessageModerator } from "./MessageModerator";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,6 +33,9 @@ import MessageSearchBar from './MessageSearchBar';
 import PinnedMessagesSection from './PinnedMessagesSection';
 import EditMessageModal from './EditMessageModal';
 import DeleteMessageModal from './DeleteMessageModal';
+import EmojiPickerButton from './EmojiPickerButton';
+import ReadReceipts from './ReadReceipts';
+import UserOnlineIndicator from './UserOnlineIndicator';
 
 import { Pencil, Trash2 } from 'lucide-react';
 
@@ -62,7 +67,9 @@ const updateTrustScore = async (user, amount, reason, relatedEntityId = null) =>
 };
 
 export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscription }) {
-  const [messages, setMessages] = useState([]);
+  const { messages: realtimeMessages, setMessages } = useRealtimeMessages(room?.id, []);
+  const { onlineUsers, isUserOnline } = useUserPresence(room?.id, user?.id);
+  const [messages, setLocalMessages] = useState([]);
   const [filteredMessages, setFilteredMessages] = useState([]);
   const [users, setUsers] = useState({});
   const [newMessage, setNewMessage] = useState("");
@@ -98,6 +105,7 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
 
   const [editingMessage, setEditingMessage] = useState(null);
   const [deletingMessage, setDeletingMessage] = useState(null);
+  const [usersById, setUsersById] = useState({});
 
   // Throttle typing updates to max once per 2 seconds
   const lastTypingUpdateRef = useRef(0);
@@ -131,6 +139,7 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
       
       const finalMessages = fetchedMessages.length > 0 ? fetchedMessages : sampleMessages.filter((m) => m.chat_room_id === room.id);
       setMessages(finalMessages);
+      setLocalMessages(finalMessages);
       setFilteredMessages(finalMessages);
 
       // Load pinned messages
@@ -153,14 +162,21 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
           acc[u.email || u.id] = u;
           return acc;
         }, {});
+        const usersByIdMap = (fetchedUsers.length > 0 ? fetchedUsers : sampleUsers).reduce((acc, u) => {
+          acc[u.id] = u;
+          return acc;
+        }, {});
         setUsers(usersMap);
+        setUsersById(usersByIdMap);
       }
 
     } catch (error) {
       if (!isMountedRef.current) return;
       console.error("Error loading initial data:", error);
-      setMessages(sampleMessages.filter((m) => m.chat_room_id === room.id));
-      setFilteredMessages(sampleMessages.filter((m) => m.chat_room_id === room.id));
+      const sampleFiltered = sampleMessages.filter((m) => m.chat_room_id === room.id);
+      setMessages(sampleFiltered);
+      setLocalMessages(sampleFiltered);
+      setFilteredMessages(sampleFiltered);
       setPinnedMessages([]);
     } finally {
       if (isMountedRef.current) {
@@ -182,6 +198,7 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
     };
 
     setMessages((prev) => [...prev, botMessage]);
+    setLocalMessages((prev) => [...prev, botMessage]);
 
     try {
       await Message.create({
@@ -194,6 +211,20 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
       console.error("Failed to save bot message:", error);
     }
   }, [room?.id]);
+
+  // Sync realtime messages with local state
+  useEffect(() => {
+    if (realtimeMessages.length > 0) {
+      setLocalMessages(realtimeMessages);
+    }
+  }, [realtimeMessages]);
+
+  // Sync local messages to filter
+  useEffect(() => {
+    if (messages.length > 0) {
+      setLocalMessages(messages);
+    }
+  }, [messages]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -223,6 +254,36 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
     }, 50);
 
   }, [messages, isLoading, isUserAtBottom, scrollToBottom]);
+
+  // Mark messages as read when they appear
+  useEffect(() => {
+    if (!user || messages.length === 0) return;
+
+    const markAsRead = async () => {
+      const unreadMessages = messages.filter(
+        msg => !msg.is_bot && msg.user_id !== user.id && msg.id && !msg.id.startsWith('bot_')
+      );
+
+      for (const msg of unreadMessages) {
+        try {
+          await MessageReadReceipt.create({
+            message_id: msg.id,
+            user_id: user.id,
+            read_at: new Date().toISOString()
+          });
+        } catch (error) {
+          // Ignore duplicate key errors (already marked as read)
+          if (!error.message?.includes('duplicate key')) {
+            console.error('Error marking message as read:', error);
+          }
+        }
+      }
+    };
+
+    // Mark as read after a short delay to simulate reading
+    const timer = setTimeout(markAsRead, 2000);
+    return () => clearTimeout(timer);
+  }, [messages, user]);
 
   useEffect(() => {
     if (!isLoading && !chatInitializedRef.current && room?.id) {
@@ -325,6 +386,7 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
         ...(replyMetadata && replyMetadata)
       };
       setMessages((prev) => [...prev, optimisticMessage]);
+      setLocalMessages((prev) => [...prev, optimisticMessage]);
       setNewMessage("");
       setFile(null);
       setReplyingToMessageId(null);
@@ -345,11 +407,13 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
 
         const createdMessage = await Message.create(fileMessageData);
         setMessages((prev) => prev.map((msg) => msg.id === tempMessageId ? createdMessage : msg));
+        setLocalMessages((prev) => prev.map((msg) => msg.id === tempMessageId ? createdMessage : msg));
         await updateTrustScore(user, 0.2, "Shared a file in chat", createdMessage.id);
       } catch (error) {
         console.error("File upload failed", error);
         alert("Failed to upload file. Please try again.");
         setMessages((prev) => prev.filter((msg) => msg.id !== tempMessageId));
+        setLocalMessages((prev) => prev.filter((msg) => msg.id !== tempMessageId));
       } finally {
         setIsUploading(false);
         setIsSending(false);
@@ -433,6 +497,7 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
     };
 
     setMessages((prev) => [...prev, messageData]);
+    setLocalMessages((prev) => [...prev, messageData]);
     setNewMessage("");
     setReplyingToMessageId(null);
 
@@ -447,6 +512,7 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
       });
 
       setMessages((prev) => prev.map((msg) => msg.id === tempId ? createdMessage : msg));
+      setLocalMessages((prev) => prev.map((msg) => msg.id === tempId ? createdMessage : msg));
       await updateTrustScore(user, 0.1, "Sent a valid message in chat", createdMessage.id);
     } catch (error) {
       console.error("Failed to send message", error);
@@ -731,6 +797,10 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
                 <p className="text-xs md:text-sm text-slate-600 truncate">{room.description}</p>
               </div>
               <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+                <Badge variant="outline" className="bg-green-50 text-green-700 flex items-center gap-1">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  {onlineUsers.length} online
+                </Badge>
                 <Badge variant="outline" className="bg-blue-50 text-blue-700">
                   <Users className="w-3 h-3 mr-1" />
                   {room.participant_count || 0} members
@@ -825,17 +895,24 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
                         <div key={msg.id}>
                           <div className={`flex items-start gap-2 group ${isCurrentUser ? 'justify-end' : ''}`}>
                             {!isCurrentUser && (
-                              <Avatar className="h-8 w-8 flex-shrink-0">
-                                {isBot ? (
-                                  <AvatarFallback className="bg-slate-600">
-                                    <Bot className="w-4 h-4 text-white" />
-                                  </AvatarFallback>
-                                ) : (
-                                  <AvatarFallback style={{ backgroundColor: msgUser.profile_color, color: 'white' }}>
-                                    {msgUser.display_name?.charAt(0) || 'U'}
-                                  </AvatarFallback>
+                              <div className="relative">
+                                <Avatar className="h-8 w-8 flex-shrink-0">
+                                  {isBot ? (
+                                    <AvatarFallback className="bg-slate-600">
+                                      <Bot className="w-4 h-4 text-white" />
+                                    </AvatarFallback>
+                                  ) : (
+                                    <AvatarFallback style={{ backgroundColor: msgUser.profile_color, color: 'white' }}>
+                                      {msgUser.display_name?.charAt(0) || 'U'}
+                                    </AvatarFallback>
+                                  )}
+                                </Avatar>
+                                {!isBot && isUserOnline(msg.user_id) && (
+                                  <div className="absolute -bottom-0.5 -right-0.5">
+                                    <UserOnlineIndicator isOnline={true} size="xs" />
+                                  </div>
                                 )}
-                              </Avatar>
+                              </div>
                             )}
 
                             <div className={`flex-1 max-w-xs md:max-w-md ${isCurrentUser ? 'flex flex-col items-end' : ''}`}>
@@ -869,10 +946,15 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
                                 )}
                               </div>
 
-                              <p className="text-xs mt-1 text-slate-400">
-                                {formatDistanceToNow(new Date(msg.created_date), { addSuffix: true })}
-                                {msg.is_edited && !msg.is_deleted && <span className="ml-1 text-xs text-slate-500">(edited)</span>}
-                              </p>
+                              <div className="flex items-center gap-2 mt-1">
+                                <p className="text-xs text-slate-400">
+                                  {formatDistanceToNow(new Date(msg.created_date), { addSuffix: true })}
+                                  {msg.is_edited && !msg.is_deleted && <span className="ml-1">(edited)</span>}
+                                </p>
+                                {!msg.is_bot && msg.id && !msg.id.startsWith('bot_') && !msg.is_deleted && (
+                                  <ReadReceipts messageId={msg.id} users={usersById} />
+                                )}
+                              </div>
                             </div>
 
                             {!isBot && msg.id && !msg.id.startsWith('bot_') && !msg.is_deleted && (
@@ -929,11 +1011,13 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
                             )}
 
                             {isCurrentUser && (
-                              <Avatar className="h-8 w-8 flex-shrink-0">
-                                <AvatarFallback style={{ backgroundColor: msgUser.profile_color, color: 'white' }}>
-                                  {msgUser.display_name?.charAt(0) || 'U'}
-                                </AvatarFallback>
-                              </Avatar>
+                              <div className="relative">
+                                <Avatar className="h-8 w-8 flex-shrink-0">
+                                  <AvatarFallback style={{ backgroundColor: msgUser.profile_color, color: 'white' }}>
+                                    {msgUser.display_name?.charAt(0) || 'U'}
+                                  </AvatarFallback>
+                                </Avatar>
+                              </div>
                             )}
                           </div>
 
@@ -1033,6 +1117,10 @@ export default function ChatInterface({ room, user, onBack, onUpdateRoom, subscr
                   >
                     <Paperclip className="h-4 w-4" />
                   </Button>
+                  <EmojiPickerButton
+                    onEmojiSelect={(emoji) => setNewMessage(prev => prev + emoji)}
+                    disabled={!user || (user.trust_score !== undefined && user.trust_score < 20) || isUploading || isSending}
+                  />
                   <input
                     type="file"
                     ref={fileInputRef}

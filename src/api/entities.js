@@ -96,6 +96,8 @@ const createEntity = (tableName) => ({
 export const Stock = createEntity('stocks');
 export const ChatRoom = createEntity('chat_rooms');
 export const Message = createEntity('messages');
+export const MessageReadReceipt = createEntity('message_read_receipts');
+export const UserPresence = createEntity('user_presence');
 export const Poll = createEntity('polls');
 export const PollVote = createEntity('poll_votes');
 export const Subscription = createEntity('subscriptions');

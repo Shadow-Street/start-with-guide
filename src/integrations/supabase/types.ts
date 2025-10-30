@@ -3078,6 +3078,30 @@ export type Database = {
         }
         Relationships: []
       }
+      message_read_receipts: {
+        Row: {
+          created_date: string
+          id: string
+          message_id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          created_date?: string
+          id?: string
+          message_id: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          created_date?: string
+          id?: string
+          message_id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           chat_room_id: string
@@ -3088,7 +3112,9 @@ export type Database = {
           id: string
           is_sample: boolean | null
           mentioned_stock: string | null
+          mentioned_users: string[] | null
           message_type: string | null
+          read_count: number | null
           updated_date: string | null
           user_id: string | null
         }
@@ -3101,7 +3127,9 @@ export type Database = {
           id: string
           is_sample?: boolean | null
           mentioned_stock?: string | null
+          mentioned_users?: string[] | null
           message_type?: string | null
+          read_count?: number | null
           updated_date?: string | null
           user_id?: string | null
         }
@@ -3114,7 +3142,9 @@ export type Database = {
           id?: string
           is_sample?: boolean | null
           mentioned_stock?: string | null
+          mentioned_users?: string[] | null
           message_type?: string | null
+          read_count?: number | null
           updated_date?: string | null
           user_id?: string | null
         }
@@ -4806,6 +4836,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_presence: {
+        Row: {
+          chat_room_id: string | null
+          created_date: string
+          id: string
+          last_seen: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chat_room_id?: string | null
+          created_date?: string
+          id?: string
+          last_seen?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chat_room_id?: string | null
+          created_date?: string
+          id?: string
+          last_seen?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -4923,6 +4983,7 @@ export type Database = {
         Args: never
         Returns: undefined
       }
+      cleanup_old_presence: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
