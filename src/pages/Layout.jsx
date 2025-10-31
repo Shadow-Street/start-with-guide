@@ -53,8 +53,12 @@ function InnerLayout({ children, currentPageName }) {
       if (!session?.user || !isMounted) return;
 
       const userId = session.user.id;
+      console.log('Loading user data for:', userId);
       
       try {
+        // Immediately set guest mode to false since we have a session
+        setIsGuestMode(false);
+        
         // Fetch profile
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
@@ -63,9 +67,10 @@ function InnerLayout({ children, currentPageName }) {
           .single();
         
         if (profileError) {
+          console.log('Profile error:', profileError);
           // If profile doesn't exist, create one
           if (profileError.code === 'PGRST116') {
-            const { data: newProfile } = await supabase
+            const { data: newProfile, error: insertError } = await supabase
               .from('profiles')
               .insert({
                 id: userId,
@@ -75,7 +80,7 @@ function InnerLayout({ children, currentPageName }) {
               .select()
               .single();
             
-            if (newProfile && isMounted) {
+            if (!insertError && newProfile && isMounted) {
               // Load roles for new profile
               const roles = await getUserRoles(userId).catch(() => ['user']);
               const userWithRoles = { 
@@ -86,6 +91,7 @@ function InnerLayout({ children, currentPageName }) {
                 primaryRole: roles[0] || 'user',
                 app_role: roles[0] || 'user'
               };
+              console.log('User created and loaded:', userWithRoles);
               setUser(userWithRoles);
               setUserRoles(roles);
               setIsGuestMode(false);
@@ -110,6 +116,7 @@ function InnerLayout({ children, currentPageName }) {
                      roles.includes('moderator') ? 'moderator' : 'user'
           };
           
+          console.log('User loaded:', userWithRoles);
           setUser(userWithRoles);
           setUserRoles(roles);
           setIsGuestMode(false);
@@ -125,6 +132,10 @@ function InnerLayout({ children, currentPageName }) {
         }
       } catch (err) {
         console.error('Error loading user data:', err);
+        // Even if there's an error, if we have a session, don't show guest mode
+        if (session?.user && isMounted) {
+          setIsGuestMode(false);
+        }
       }
     };
     
@@ -133,13 +144,18 @@ function InnerLayout({ children, currentPageName }) {
       (event, session) => {
         if (!isMounted) return;
 
+        console.log('Auth state changed:', event, !!session);
         setSession(session);
         setIsAuthCheckComplete(true);
         
         if (session?.user) {
+          console.log('User session detected, loading user data');
+          // Immediately set guest mode to false
+          setIsGuestMode(false);
           // Load user data asynchronously without blocking
           setTimeout(() => loadUserData(session), 0);
         } else {
+          console.log('No session, setting guest mode');
           setUser(null);
           setUserRoles([]);
           setIsSubscribed(false);
@@ -155,16 +171,22 @@ function InnerLayout({ children, currentPageName }) {
         
         if (!isMounted) return;
         
+        console.log('Initial auth check:', !!session, error);
+        
         if (error || !session) {
           setIsAuthCheckComplete(true);
           setIsGuestMode(true);
         } else {
+          console.log('Initial session found, loading user');
           setSession(session);
           setIsAuthCheckComplete(true);
+          // Immediately set guest mode to false
+          setIsGuestMode(false);
           // Load data async without blocking UI
           setTimeout(() => loadUserData(session), 0);
         }
       } catch (err) {
+        console.error('Auth init error:', err);
         if (isMounted) {
           setIsAuthCheckComplete(true);
           setIsGuestMode(true);
