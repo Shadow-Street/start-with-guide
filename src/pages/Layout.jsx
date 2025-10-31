@@ -348,10 +348,11 @@ function InnerLayout({ children, currentPageName }) {
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-white truncate text-sm">{user.display_name || 'Trader'}</p>
+                        <p className="text-xs text-white/80 mt-0.5">View Profile & Settings</p>
                       </div>
-                      {/* Edit Icon - Shows on hover */}
+                      {/* Settings Icon - Shows on hover */}
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <Edit3 className="w-4 h-4 text-white" />
+                        <Settings className="w-4 h-4 text-white" />
                       </div>
                     </div>
                   </div>
