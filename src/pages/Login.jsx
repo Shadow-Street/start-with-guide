@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { LogIn, ArrowRight, Loader2 } from 'lucide-react';
+import { LogIn, ArrowRight, Loader2, User } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { getUserRoles, determinePrimaryRole } from '@/lib/security/auth';
 
@@ -154,8 +154,9 @@ export default function Login() {
           </div>
 
           <div className="mt-4 text-center">
-            <Link to="/Dashboard" className="text-sm text-muted-foreground hover:text-foreground">
-              Continue as guest
+            <Link to="/Dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-2">
+              <User className="w-4 h-4" />
+              <span>Profile</span>
             </Link>
           </div>
         </CardContent>
