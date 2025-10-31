@@ -332,30 +332,6 @@ function InnerLayout({ children, currentPageName }) {
           </SidebarHeader>
 
           <SidebarContent className="sidebar-content-scrollable flex-1 flex flex-col gap-2 overflow-y-auto p-3">
-            {/* Guest Mode Banner */}
-            {isGuestMode && (
-              <div className="mb-4">
-                <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg shadow-md text-white relative group">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/25 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
-                      👤
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-white text-sm">Guest Mode</p>
-                      <p className="text-xs text-white/80 mt-1">Exploring the platform</p>
-                    </div>
-                  </div>
-                  <Link to="/Login">
-                    <div className="mt-3 bg-white/20 hover:bg-white/30 rounded-lg px-3 py-2 text-center cursor-pointer transition-all">
-                      <span className="text-xs font-semibold flex items-center justify-center gap-2">
-                        <LogIn className="w-3 h-3" />
-                        Login to Save Progress
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            )}
 
             {/* Logged In User Profile */}
             {user && (
@@ -490,11 +466,6 @@ function InnerLayout({ children, currentPageName }) {
             <h1 className="text-xl font-semibold text-gray-900">{currentPageName || 'Protocol'}</h1>
             <div className="flex items-center gap-4">
               {user && <RealtimeNotificationBell />}
-              {isGuestMode && (
-                <Badge className="bg-blue-100 text-blue-800 border-blue-200">
-                  👤 Guest Mode
-                </Badge>
-              )}
             </div>
           </header>
           <main className="flex-1 overflow-y-auto bg-gray-50">
