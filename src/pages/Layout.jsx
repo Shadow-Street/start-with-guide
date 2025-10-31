@@ -173,7 +173,28 @@ function InnerLayout({ children, currentPageName }) {
         
         console.log('Initial auth check:', !!session, error);
         
-        if (error || !session) {
+        if (error) {
+          // Handle SecurityError specifically
+          if (error.message?.includes('LockManager')) {
+            console.warn('LockManager error detected, attempting fallback auth check');
+            // Fallback: Try to get user directly
+            try {
+              const { data: { user } } = await supabase.auth.getUser();
+              if (user) {
+                const fallbackSession = { user, access_token: null, refresh_token: null };
+                setSession(fallbackSession);
+                setIsAuthCheckComplete(true);
+                setIsGuestMode(false);
+                setTimeout(() => loadUserData(fallbackSession), 0);
+                return;
+              }
+            } catch (fallbackError) {
+              console.error('Fallback auth check failed:', fallbackError);
+            }
+          }
+          setIsAuthCheckComplete(true);
+          setIsGuestMode(true);
+        } else if (!session) {
           setIsAuthCheckComplete(true);
           setIsGuestMode(true);
         } else {
@@ -187,6 +208,22 @@ function InnerLayout({ children, currentPageName }) {
         }
       } catch (err) {
         console.error('Auth init error:', err);
+        // Try fallback for LockManager errors
+        if (err.message?.includes('LockManager')) {
+          try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user && isMounted) {
+              const fallbackSession = { user, access_token: null, refresh_token: null };
+              setSession(fallbackSession);
+              setIsAuthCheckComplete(true);
+              setIsGuestMode(false);
+              setTimeout(() => loadUserData(fallbackSession), 0);
+              return;
+            }
+          } catch (fallbackError) {
+            console.error('Fallback failed:', fallbackError);
+          }
+        }
         if (isMounted) {
           setIsAuthCheckComplete(true);
           setIsGuestMode(true);
