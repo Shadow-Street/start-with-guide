@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import ChatRoomCard from "../components/chat/ChatRoomCard";
 import CreateRoomModal from "../components/chat/CreateRoomModal";
 import ChatInterface from "../components/chat/ChatInterface";
+import { useRealtimeChatRooms } from "../components/chat/hooks/useRealtimeChatRooms";
 // import "../components/chat/ChatRoomCard.css";
 
 // Sample data for fallback
@@ -102,111 +103,81 @@ const sampleRooms = [
 ];
 
 export default function ChatRooms() {
-  const [chatRooms, setChatRooms] = useState([]);
+  // Use real-time hook for chat rooms
+  const { chatRooms, setChatRooms, isLoading, refreshChatRooms } = useRealtimeChatRooms(sampleRooms);
+  
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("all");
   const [user, setUser] = useState(null);
   const [roomToDelete, setRoomToDelete] = useState(null);
 
-  const loadData = useCallback(async (isMounted, abortController) => {
-    try {
-      if (!isMounted || abortController?.signal.aborted) return;
+  // Load user data
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await User.me().catch(() => null);
+        setUser(currentUser);
+      } catch (error) {
+        console.log("User not logged in or error:", error);
+        setUser(null);
+      }
+    };
+    
+    loadUser();
+  }, []);
 
-      const [rooms, currentUser] = await Promise.all([
-        api.getChatRooms({ orderBy: '-participant_count' }).catch(() => []),
-        User.me().catch(() => null) // Allow null user for guests
-      ]);
-
-      if (!isMounted || abortController?.signal.aborted) return;
-      
-      const loadedRooms = rooms.length > 0 ? rooms : sampleRooms;
-      setChatRooms(loadedRooms);
-      setUser(currentUser); // Will be null for guests
-
-      // Check for stock_symbol in URL to auto-select a room
+  // Auto-select room from URL
+  useEffect(() => {
+    if (chatRooms.length > 0) {
       const urlParams = new URLSearchParams(window.location.search);
       const stockSymbolFromUrl = urlParams.get('stock_symbol');
-      if (stockSymbolFromUrl) {
-        const roomToSelect = loadedRooms.find(r => r.stock_symbol === stockSymbolFromUrl);
+      if (stockSymbolFromUrl && !selectedRoom) {
+        const roomToSelect = chatRooms.find(r => r.stock_symbol === stockSymbolFromUrl);
         if (roomToSelect) {
           setSelectedRoom(roomToSelect);
         }
       }
-
-    } catch (error) {
-      if (!isMounted || abortController?.signal.aborted) {
-        if (error.name === 'AbortError' || error.message?.includes('aborted')) {
-          console.log("Load data aborted:", error);
-          return;
-        }
-        return;
-      }
-      console.log("Loading chat rooms with sample data (guest mode or error)");
-      setChatRooms(sampleRooms);
-      setUser(null); // Guest mode
-    } finally {
-      if (isMounted && !abortController?.signal.aborted) {
-        setIsLoading(false);
-      }
     }
-  }, []);
-
-  useEffect(() => {
-    let isMounted = true;
-    let abortController = new AbortController();
-
-    loadData(isMounted, abortController);
-
-    return () => {
-      isMounted = false;
-      abortController.abort();
-    };
-  }, [loadData]);
+  }, [chatRooms, selectedRoom]);
 
   const handleCreateRoom = async (roomData) => {
-    // Check if user is logged in
     if (!user) {
       toast.error("Please log in to create chat rooms.");
-      setShowCreateModal(false); // Close modal on error
+      setShowCreateModal(false);
       return;
     }
 
     try {
-      const newRoom = await ChatRoom.create(roomData);
-      setChatRooms((prev) => [newRoom, ...prev]);
-      toast.success(`Chat room "${newRoom.name}" created successfully.`);
+      await ChatRoom.create(roomData);
+      toast.success("Chat room created successfully.");
+      setShowCreateModal(false);
+      // Real-time hook will automatically update the list
     } catch (error) {
-      if (!error.message?.includes('aborted') && error.name !== 'AbortError') {
-        console.error("Error creating room:", error);
-        toast.error("Failed to create chat room. Please try again.");
-      }
+      console.error("Error creating room:", error);
+      toast.error("Failed to create chat room. Please try again.");
+      setShowCreateModal(false);
     }
-    setShowCreateModal(false);
   };
 
   const confirmDeleteRoom = async () => {
     if (!roomToDelete) return;
     
-    // Check if user is logged in
     if (!user) {
       toast.error("Please log in to delete chat rooms.");
-      setRoomToDelete(null); // Close dialog
+      setRoomToDelete(null);
       return;
     }
 
     try {
       await ChatRoom.delete(roomToDelete.id);
-      setChatRooms((prev) => prev.filter((room) => room.id !== roomToDelete.id));
-      toast.success(`Chat room "${roomToDelete.name}" has been deleted.`);
+      toast.success("Chat room deleted successfully.");
+      setRoomToDelete(null);
+      // Real-time hook will automatically update the list
     } catch (error) {
-      if (!error.message?.includes('aborted') && error.name !== 'AbortError') {
-        console.error("Error deleting room:", error);
-        toast.error("Failed to delete the chat room. Please try again.");
-      }
-    } finally {
+      console.error("Error deleting room:", error);
+      toast.error("Failed to delete chat room.");
       setRoomToDelete(null);
     }
   };
@@ -233,7 +204,7 @@ export default function ChatRooms() {
         room={selectedRoom}
         user={user}
         onBack={() => setSelectedRoom(null)}
-        onUpdateRoom={loadData}
+        onUpdateRoom={refreshChatRooms}
       />
     );
   }

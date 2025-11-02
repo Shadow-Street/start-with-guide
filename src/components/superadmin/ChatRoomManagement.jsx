@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChatRoom, Message, User } from '@/api/entities';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Message, User } from '@/api/entities';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,9 +18,12 @@ import { toast } from 'sonner';
 import ChatRoomTable from './chatrooms/ChatRoomTable';
 import ChatRoomStats from './chatrooms/ChatRoomStats';
 import ChatRoomFormModal from './chatrooms/ChatRoomFormModal';
+import { useRealtimeChatRooms } from '../chat/hooks/useRealtimeChatRooms';
 
 export default function ChatRoomManagement({ user }) {
-  const [chatRooms, setChatRooms] = useState([]);
+  // Use real-time hook for chat rooms
+  const { chatRooms, isLoading: roomsLoading, refreshChatRooms } = useRealtimeChatRooms([], '-created_date');
+  
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -34,51 +37,58 @@ export default function ChatRoomManagement({ user }) {
     activeToday: 0
   });
 
-  const loadData = useCallback(async () => {
+  // Load additional data (messages and users)
+  const loadAdditionalData = useCallback(async () => {
     try {
-      setIsLoading(true);
-      const [rooms, msgs, allUsers] = await Promise.all([
-        ChatRoom.list('-created_date'),
+      const [msgs, allUsers] = await Promise.all([
         Message.list('-created_date', 1000),
         User.list()
       ]);
 
-      setChatRooms(rooms);
       setMessages(msgs);
       setUsers(allUsers);
+    } catch (error) {
+      console.error('Error loading additional data:', error);
+      toast.error('Failed to load messages and users');
+    }
+  }, []);
 
-      // Calculate stats
+  // Calculate stats whenever chatRooms change
+  useEffect(() => {
+    if (chatRooms.length > 0) {
       const today = new Date().toDateString();
-      const activeToday = rooms.filter(r => 
+      const activeToday = chatRooms.filter(r => 
         r.updated_date && new Date(r.updated_date).toDateString() === today
       ).length;
 
       setStats({
-        total: rooms.length,
-        active: rooms.filter(r => r.is_meeting_active).length,
-        premium: rooms.filter(r => r.is_premium).length,
-        totalParticipants: rooms.reduce((sum, r) => sum + (r.participant_count || 0), 0),
-        totalMessages: msgs.length,
+        total: chatRooms.length,
+        active: chatRooms.filter(r => r.is_meeting_active).length,
+        premium: chatRooms.filter(r => r.is_premium).length,
+        totalParticipants: chatRooms.reduce((sum, r) => sum + (r.participant_count || 0), 0),
+        totalMessages: messages.length,
         activeToday
       });
-    } catch (error) {
-      console.error('Error loading chat room data:', error);
-      toast.error('Failed to load chat room data');
-    } finally {
-      setIsLoading(false);
     }
-  }, []);
+  }, [chatRooms, messages]);
 
+  // Initial data load
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    const initData = async () => {
+      setIsLoading(true);
+      await loadAdditionalData();
+      setIsLoading(false);
+    };
+    
+    initData();
+  }, [loadAdditionalData]);
 
   const handleCreateRoom = async (roomData) => {
     try {
       await ChatRoom.create(roomData);
       toast.success('Chat room created successfully');
       setShowCreateModal(false);
-      loadData();
+      // Real-time hook will automatically update the list
     } catch (error) {
       console.error('Error creating chat room:', error);
       toast.error('Failed to create chat room');
@@ -89,7 +99,7 @@ export default function ChatRoomManagement({ user }) {
     try {
       await ChatRoom.update(roomId, roomData);
       toast.success('Chat room updated successfully');
-      loadData();
+      // Real-time hook will automatically update the list
     } catch (error) {
       console.error('Error updating chat room:', error);
       toast.error('Failed to update chat room');
@@ -104,7 +114,7 @@ export default function ChatRoomManagement({ user }) {
     try {
       await ChatRoom.delete(roomId);
       toast.success('Chat room deleted successfully');
-      loadData();
+      // Real-time hook will automatically update the list
     } catch (error) {
       console.error('Error deleting chat room:', error);
       toast.error('Failed to delete chat room');
@@ -273,7 +283,7 @@ export default function ChatRoomManagement({ user }) {
             users={users}
             onUpdate={handleUpdateRoom}
             onDelete={handleDeleteRoom}
-            onRefresh={loadData}
+            onRefresh={refreshChatRooms}
           />
         </TabsContent>
 
