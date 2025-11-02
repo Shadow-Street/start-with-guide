@@ -139,93 +139,87 @@ export default function EventsPage() {
   // Enable event automation (auto-status updates, reminders, payouts)
   useEventAutomation();
 
-  useEffect(() => {
-    let isMounted = true;
-    let abortController = new AbortController();
+  const loadData = React.useCallback(async () => {
+    try {
+      setIsLoading(true);
+      
+      // Try to get user, but allow null for guests
+      const currentUser = await User.me().catch(() => null);
+      
+      if (abortController.signal.aborted) return;
+      
+      setUser(currentUser);
 
-    const loadData = async () => {
-      try {
-        // Try to get user, but allow null for guests
-        const currentUser = await User.me().catch(() => null);
-        
-        if (!isMounted || abortController.signal.aborted) return;
-        
-        setUser(currentUser);
+      // Load events with error handling
+      const loadedEvents = await api.getEvents({ 
+        status: { $in: ['approved', 'scheduled'] },
+        limit: 50,
+        orderBy: '-event_date'
+      }).catch(() => []);
+      
+      if (abortController.signal.aborted) return;
 
-        // Load events with error handling
-        const loadedEvents = await api.getEvents({ 
-          status: { $in: ['approved', 'scheduled'] },
-          limit: 50,
-          orderBy: '-event_date'
-        }).catch(() => []);
-        
-        if (!isMounted || abortController.signal.aborted) return;
-
-        if (loadedEvents.length > 0) {
-          setEvents(loadedEvents);
-        } else {
-          // Use sample data if no events loaded
-          setEvents(sampleEvents);
-        }
-
-        // Only load user-specific data if user is logged in
-        if (currentUser?.id) {
-          const [ticketsData, attendanceData, subscriptionData] = await Promise.all([
-            api.getEventTickets({ user_id: currentUser.id }).catch(() => []),
-            api.getEventAttendees({ user_id: currentUser.id }).catch(() => []),
-            api.getSubscriptions({ user_id: currentUser.id, status: 'active' }).catch(() => [])
-          ]);
-
-          if (!isMounted || abortController.signal.aborted) return;
-
-          setUserTickets(ticketsData);
-          setUserAttendance(attendanceData);
-          const activeSub = subscriptionData[0] || null;
-          setUserSubscription(activeSub);
-
-          // Determine if user has a premium-level subscription
-          const userHasPremiumSub = activeSub && ['premium', 'vip'].includes(activeSub.plan_type);
-          setHasSubscription(userHasPremiumSub); 
-        } else {
-          // Reset user-specific states if no user
-          setUserTickets([]);
-          setUserAttendance([]);
-          setUserSubscription(null);
-          setHasSubscription(false);
-        }
-
-        // Admins and Super Admins always have access to premium features
-        if (currentUser && ['admin', 'super_admin'].includes(currentUser.app_role)) {
-          setHasSubscription(true);
-        }
-
-      } catch (error) {
-        if (!isMounted || abortController.signal.aborted) return;
-        console.error("Error loading all data:", error); 
-        console.log("Attempting to load events in guest mode with sample data due to error.");
-        
-        // Ensure state is clean and falls back to sample data in case of error
+      if (loadedEvents.length > 0) {
+        setEvents(loadedEvents);
+      } else {
+        // Use sample data if no events loaded
         setEvents(sampleEvents);
-        setUser(null);
+      }
+
+      // Only load user-specific data if user is logged in
+      if (currentUser?.id) {
+        const [ticketsData, attendanceData, subscriptionData] = await Promise.all([
+          api.getEventTickets({ user_id: currentUser.id }).catch(() => []),
+          api.getEventAttendees({ user_id: currentUser.id }).catch(() => []),
+          api.getSubscriptions({ user_id: currentUser.id, status: 'active' }).catch(() => [])
+        ]);
+
+        if (abortController.signal.aborted) return;
+
+        setUserTickets(ticketsData);
+        setUserAttendance(attendanceData);
+        const activeSub = subscriptionData[0] || null;
+        setUserSubscription(activeSub);
+
+        // Determine if user has a premium-level subscription
+        const userHasPremiumSub = activeSub && ['premium', 'vip'].includes(activeSub.plan_type);
+        setHasSubscription(userHasPremiumSub); 
+      } else {
+        // Reset user-specific states if no user
         setUserTickets([]);
         setUserAttendance([]);
         setUserSubscription(null);
         setHasSubscription(false);
-        toast.error('Failed to load events data. Displaying sample data.');
-      } finally {
-        if (isMounted && !abortController.signal.aborted) {
-          setIsLoading(false);
-        }
       }
-    };
 
-    loadData();
+      // Admins and Super Admins always have access to premium features
+      if (currentUser && ['admin', 'super_admin'].includes(currentUser.app_role)) {
+        setHasSubscription(true);
+      }
 
-    return () => {
-      isMounted = false;
-      abortController.abort();
-    };
+    } catch (error) {
+      if (abortController.signal.aborted) return;
+      console.error("Error loading all data:", error); 
+      console.log("Attempting to load events in guest mode with sample data due to error.");
+      
+      // Ensure state is clean and falls back to sample data in case of error
+      setEvents(sampleEvents);
+      setUser(null);
+      setUserTickets([]);
+      setUserAttendance([]);
+      setUserSubscription(null);
+      setHasSubscription(false);
+      toast.error('Failed to load events data. Displaying sample data.');
+    } finally {
+      if (!abortController.signal.aborted) {
+        setIsLoading(false);
+      }
+    }
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const isPremiumUser = useMemo(() => hasSubscription, [hasSubscription]);
 
