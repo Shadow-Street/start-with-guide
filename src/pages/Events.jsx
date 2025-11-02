@@ -146,8 +146,6 @@ export default function EventsPage() {
       // Try to get user, but allow null for guests
       const currentUser = await User.me().catch(() => null);
       
-      if (abortController.signal.aborted) return;
-      
       setUser(currentUser);
 
       // Load events with error handling
@@ -156,8 +154,6 @@ export default function EventsPage() {
         limit: 50,
         orderBy: '-event_date'
       }).catch(() => []);
-      
-      if (abortController.signal.aborted) return;
 
       if (loadedEvents.length > 0) {
         setEvents(loadedEvents);
@@ -173,8 +169,6 @@ export default function EventsPage() {
           api.getEventAttendees({ user_id: currentUser.id }).catch(() => []),
           api.getSubscriptions({ user_id: currentUser.id, status: 'active' }).catch(() => [])
         ]);
-
-        if (abortController.signal.aborted) return;
 
         setUserTickets(ticketsData);
         setUserAttendance(attendanceData);
@@ -198,7 +192,6 @@ export default function EventsPage() {
       }
 
     } catch (error) {
-      if (abortController.signal.aborted) return;
       console.error("Error loading all data:", error); 
       console.log("Attempting to load events in guest mode with sample data due to error.");
       
@@ -211,14 +204,26 @@ export default function EventsPage() {
       setHasSubscription(false);
       toast.error('Failed to load events data. Displaying sample data.');
     } finally {
-      if (!abortController.signal.aborted) {
-        setIsLoading(false);
-      }
+      setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadData();
+    let isMounted = true;
+    const abortController = new AbortController();
+    
+    const init = async () => {
+      if (isMounted) {
+        await loadData();
+      }
+    };
+    
+    init();
+    
+    return () => {
+      isMounted = false;
+      abortController.abort();
+    };
   }, [loadData]);
 
   const isPremiumUser = useMemo(() => hasSubscription, [hasSubscription]);
