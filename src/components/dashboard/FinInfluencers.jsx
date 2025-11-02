@@ -151,7 +151,7 @@ export default function FinInfluencers() {
 
         <div className="mt-4 text-center">
           <Link to={createPageUrl("Finfluencers")}>
-            <Button className="btn-primary">
+            <Button variant="default">
               View All FinInfluencers
             </Button>
           </Link>

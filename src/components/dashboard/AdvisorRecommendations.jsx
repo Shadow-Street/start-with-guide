@@ -171,7 +171,7 @@ export default function AdvisorRecommendations({ recommendations }) {
               <h3 className="font-bold text-gray-900 mb-2">Advisor Picks</h3>
               <p className="text-sm text-gray-600 mb-4">Access exclusive recommendations from verified advisors</p>
               <Link to={createPageUrl("Subscription")}>
-                <Button size="sm" className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
+                <Button size="sm" variant="default">
                   <Crown className="w-4 h-4 mr-2" />
                   Unlock Premium
                 </Button>

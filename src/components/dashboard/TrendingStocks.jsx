@@ -194,15 +194,19 @@ export default function TrendingStocks({ stocks }) {
                 <Button
                   onClick={() => handleWatch(stock)}
                   disabled={loadingStates[`watch-${stock.id}`]}
-                  className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl font-semibold text-sm shadow-md transition-all duration-300 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 hover:from-blue-500 hover:to-purple-600 hover:text-white hover:shadow-lg`}
+                  variant="secondary"
+                  size="sm"
+                  className="flex-1"
                 >
-                  <Star className={`w-4 h-4 transition-colors ${watchingStocks.has(stock.id) ? 'fill-yellow-400 text-yellow-500' : 'text-inherit'}`} />
+                  <Star className={`w-4 h-4 ${watchingStocks.has(stock.id) ? 'fill-yellow-500 text-yellow-500' : ''}`} />
                   {watchingStocks.has(stock.id) ? 'Watching' : 'Watch'}
                 </Button>
                 <Button
                   onClick={() => handleDiscuss(stock)}
                   disabled={loadingStates[`discuss-${stock.id}`]}
-                  className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl font-semibold text-sm shadow-md transition-all duration-300 bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 hover:from-blue-500 hover:to-purple-600 hover:text-white hover:shadow-lg`}
+                  variant="default"
+                  size="sm"
+                  className="flex-1"
                 >
                   <MessageSquare className="w-4 h-4" />
                   Discuss

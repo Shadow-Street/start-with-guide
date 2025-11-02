@@ -48,16 +48,21 @@ export default function QuickActions() {
       <CardContent className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {actions.map((action, index) => (
-            <Link key={index} to={action.link}>
-              <div className={`h-auto px-4 py-4 w-full text-sm rounded-xl font-semibold shadow-md flex flex-col items-center justify-center gap-3 transition-all duration-300 ${action.gradient} text-white hover:shadow-lg cursor-pointer transform hover:scale-105 group`}>
-                <div className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center group-hover:bg-opacity-30 transition-colors">
-                  <action.icon className="w-4 h-4" />
+          <Link key={index} to={action.link}>
+              <Button 
+                className="h-auto px-4 py-4 w-full rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                variant="default"
+              >
+                <div className="flex flex-col items-center justify-center gap-3 w-full">
+                  <div className="w-10 h-10 bg-primary-foreground/20 rounded-full flex items-center justify-center group-hover:bg-primary-foreground/30 transition-colors">
+                    <action.icon className="w-4 h-4" />
+                  </div>
+                  <div className="text-center">
+                    <p className="font-semibold text-sm mb-1">{action.title}</p>
+                    <p className="text-xs opacity-90">{action.description}</p>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="font-semibold text-sm mb-1">{action.title}</p>
-                  <p className="text-xs opacity-90">{action.description}</p>
-                </div>
-              </div>
+              </Button>
             </Link>
           ))}
         </div>

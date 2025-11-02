@@ -163,7 +163,7 @@ export default function LatestNews() {
 
         <div className="mt-4 text-center">
           <Link to={createPageUrl("News")}>
-            <Button className="btn-primary">
+            <Button variant="default">
               <ExternalLink className="w-4 h-4 mr-2" />
               View All News
             </Button>
