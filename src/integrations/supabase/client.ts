@@ -17,6 +17,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
     detectSessionInUrl: true,
     flowType: 'pkce',
     storageKey: 'sb-auth-token',
+    lock: false, // Disable Web Locks API to prevent LockManager errors in iframe contexts
   },
   db: {
     schema: 'public',
