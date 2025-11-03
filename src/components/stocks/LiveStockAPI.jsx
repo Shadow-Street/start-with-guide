@@ -1,32 +1,60 @@
+import { supabase } from '@/integrations/supabase/client';
+
 class LiveStockAPI {
   constructor() {
     this.cache = new Map();
-    this.cacheTimeout = 300000; // 5 minutes cache to reduce API calls
-    this.apiKey = "ac64de7fe95c4f90ba42d449a51c2c7d";
-    this.baseUrl = "https://api.twelvedata.com";
+    this.cacheTimeout = 60000; // 1 minute cache for real-time data
     this.subscribers = new Map();
-    this.requestQueue = [];
-    this.isProcessingQueue = false;
-    this.requestCount = 0;
-    this.requestResetTime = Date.now() + 60000; // Reset every minute
-    this.maxRequestsPerMinute = 6; // Conservative limit (leave 2 buffer)
+    this.batchTimeout = null;
+    this.pendingSymbols = new Set();
+    this.batchDelay = 500; // Batch requests every 500ms
   }
 
-  // Rate limiting management
-  canMakeRequest() {
-    const now = Date.now();
-    
-    // Reset counter every minute
-    if (now >= this.requestResetTime) {
-      this.requestCount = 0;
-      this.requestResetTime = now + 60000;
+  // Batch fetch multiple symbols efficiently
+  async fetchMultipleStocksFromAPI(symbols) {
+    try {
+      console.log('Fetching stocks from Yahoo Finance:', symbols);
+      
+      const { data, error } = await supabase.functions.invoke('yahoo-stock-data', {
+        body: { symbols: Array.from(symbols) }
+      });
+
+      if (error) {
+        console.error('Edge function error:', error);
+        throw error;
+      }
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to fetch stock data');
+      }
+
+      console.log('Yahoo Finance data received:', data.data);
+
+      // Cache all results
+      data.data.forEach(stock => {
+        this.cache.set(stock.symbol, { ...stock, timestamp: Date.now() });
+      });
+
+      return data.data;
+    } catch (error) {
+      console.error('Error fetching from Yahoo Finance:', error);
+      // Return fallback data for all symbols
+      return Array.from(symbols).map(symbol => {
+        const fallbackData = this.generateFallbackData(symbol);
+        this.cache.set(symbol, { ...fallbackData, timestamp: Date.now() });
+        return fallbackData;
+      });
     }
-    
-    return this.requestCount < this.maxRequestsPerMinute;
   }
 
-  incrementRequestCount() {
-    this.requestCount++;
+  // Process batched requests
+  async processBatch() {
+    if (this.pendingSymbols.size === 0) return;
+
+    const symbols = Array.from(this.pendingSymbols);
+    this.pendingSymbols.clear();
+    
+    await this.fetchMultipleStocksFromAPI(symbols);
   }
 
   // Get market status
@@ -83,103 +111,33 @@ class LiveStockAPI {
     };
   }
 
-  // Process request queue with rate limiting
-  async processRequestQueue() {
-    if (this.isProcessingQueue || this.requestQueue.length === 0) return;
-    
-    this.isProcessingQueue = true;
-    
-    while (this.requestQueue.length > 0 && this.canMakeRequest()) {
-      const { symbol, resolve, reject } = this.requestQueue.shift();
-      
-      try {
-        const data = await this.fetchStockFromAPI(symbol);
-        resolve(data);
-      } catch (error) {
-        // Use fallback data instead of rejecting
-        const fallbackData = this.generateFallbackData(symbol);
-        this.cache.set(symbol, { ...fallbackData, timestamp: Date.now() });
-        resolve(fallbackData);
-      }
-      
-      // Wait 10 seconds between API calls to be extra safe
-      if (this.requestQueue.length > 0) {
-        await new Promise(resolve => setTimeout(resolve, 10000));
-      }
-    }
-    
-    this.isProcessingQueue = false;
-    
-    // Process remaining requests with fallback data
-    while (this.requestQueue.length > 0) {
-      const { symbol, resolve } = this.requestQueue.shift();
-      const fallbackData = this.generateFallbackData(symbol);
-      this.cache.set(symbol, { ...fallbackData, timestamp: Date.now() });
-      resolve(fallbackData);
-    }
-  }
-
-  // Actual API fetch method
-  async fetchStockFromAPI(symbol) {
-    this.incrementRequestCount();
-    
-    const response = await fetch(
-      `${this.baseUrl}/quote?symbol=${symbol}&exchange=NSE&apikey=${this.apiKey}`
-    );
-    
-    const data = await response.json();
-
-    if (data.status === "error" || !data.symbol) {
-      throw new Error(data.message || `No data for ${symbol}`);
-    }
-
-    return this.formatApiResponse(data);
-  }
-
-  // Format API response
-  formatApiResponse(data) {
-    return {
-      symbol: data.symbol,
-      company_name: data.name,
-      current_price: parseFloat(data.close) || 0,
-      change_percent: parseFloat(data.percent_change) || 0,
-      change_amount: parseFloat(data.change) || 0,
-      day_high: parseFloat(data.high) || 0,
-      day_low: parseFloat(data.low) || 0,
-      previous_close: parseFloat(data.previous_close) || 0,
-      volume: parseInt(data.volume, 10) || 0,
-      exchange: data.exchange,
-      last_updated: data.datetime,
-      isFallback: false
-    };
-  }
 
   // Main method to get stock price
   async getStockPrice(symbol) {
     if (!symbol) return null;
 
-    // Check cache first (5 minute cache)
+    // Check cache first
     const cached = this.cache.get(symbol);
     if (cached && (Date.now() - cached.timestamp) < this.cacheTimeout) {
       return cached;
     }
 
-    // If rate limit exceeded, return cached data or fallback
-    if (!this.canMakeRequest()) {
-      if (cached) {
-        return cached; // Return stale cache
-      } else {
-        const fallbackData = this.generateFallbackData(symbol);
-        this.cache.set(symbol, { ...fallbackData, timestamp: Date.now() });
-        return fallbackData;
-      }
+    // Add to pending batch
+    this.pendingSymbols.add(symbol);
+
+    // Clear existing timeout
+    if (this.batchTimeout) {
+      clearTimeout(this.batchTimeout);
     }
 
-    // Add to request queue
-    return new Promise((resolve, reject) => {
-      this.requestQueue.push({ symbol, resolve, reject });
-      this.processRequestQueue();
-    });
+    // Set new timeout to process batch
+    this.batchTimeout = setTimeout(() => {
+      this.processBatch();
+    }, this.batchDelay);
+
+    // Wait for batch to complete and return from cache
+    await new Promise(resolve => setTimeout(resolve, this.batchDelay + 1000));
+    return this.cache.get(symbol) || this.generateFallbackData(symbol);
   }
 
   // Fetch multiple stocks with proper queuing
@@ -189,20 +147,20 @@ class LiveStockAPI {
     return results.filter(r => r !== null);
   }
 
-  // Subscribe to updates (much less frequent)
+  // Subscribe to updates (every 30 seconds for real-time feel)
   subscribe(symbol, callback) {
     if (!this.subscribers.has(symbol)) {
       this.subscribers.set(symbol, []);
     }
     this.subscribers.get(symbol).push(callback);
 
-    // Start periodic updates (every 2 minutes to respect limits)
+    // Start periodic updates
     const updateInterval = setInterval(async () => {
       const data = await this.getStockPrice(symbol);
       if (data && this.subscribers.has(symbol)) {
         this.subscribers.get(symbol).forEach(cb => cb(data));
       }
-    }, 120000); // 2 minutes
+    }, 30000); // 30 seconds for more real-time updates
 
     // Return unsubscribe function
     return () => {
